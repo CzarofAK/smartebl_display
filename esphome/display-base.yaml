@@ -1,0 +1,22 @@
+# ============================================
+# SmartEBL Display - Base Configuration
+# ============================================
+# Base ESP32 + Nextion UART Setup
+# 
+# Import in your main.yaml:
+#   packages:
+#     display_base: github://CzarofAK/smartebl_display/esphome/display-base.yaml@main
+
+uart:
+  id: nextion_uart
+  tx_pin: GPIO17  # ← Customize
+  rx_pin: GPIO16  # ← Customize
+  baud_rate: 115200
+
+display:
+  - platform: nextion
+    id: nextion_display
+    uart_id: nextion_uart
+    update_interval: 2s
+    lambda: |-
+      // Base lambda (extended by packages)
