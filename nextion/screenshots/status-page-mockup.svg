@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480">
+  <!-- Background -->
+  <rect width="800" height="480" fill="#000000"/>
+  
+  <!-- Alert Bar -->
+  <text x="400" y="30" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#07E0" text-anchor="middle">
+    ⚠️ 2 WARNINGS, 1 CAUTION
+  </text>
+  
+  <text x="720" y="30" font-family="Arial, sans-serif" font-size="16" fill="#FFFFFF" text-anchor="middle">
+    Status 1/2
+  </text>
+  
+  <!-- Menu Buttons (Left Side) -->
+  <g id="menu-buttons">
+    <!-- Electric -->
+    <text x="75" y="100" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle">Electric</text>
+    
+    <!-- Water -->
+    <text x="75" y="180" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle">Water</text>
+    
+    <!-- Climate -->
+    <text x="75" y="260" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle">Climate</text>
+    
+    <!-- Status (Active) -->
+    <text x="75" y="340" font-family="Arial, sans-serif" font-size="18" fill="#07E0" text-anchor="middle">Status</text>
+    
+    <!-- Power -->
+    <text x="75" y="420" font-family="Arial, sans-serif" font-size="18" fill="#FFFFFF" text-anchor="middle">Power</text>
+  </g>
+  
+  <!-- Content Area -->
+  <g id="content">
+    <!-- Section: Sicherungen (Fuses) -->
+    <text x="170" y="70" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF">SICHERUNGEN:</text>
+    
+    <!-- Row 1 -->
+    <text x="170" y="100" font-family="Arial, sans-serif" font-size="14" fill="#F800">🔴 Sich.1 Main</text>
+    <text x="320" y="100" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Sich.2 Lights</text>
+    <text x="470" y="100" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Sich.3 Water</text>
+    <text x="620" y="100" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Sich.4 Heater</text>
+    
+    <!-- Row 2 -->
+    <text x="170" y="125" font-family="Arial, sans-serif" font-size="14" fill="#F800">🔴 Sich.5 12V</text>
+    <text x="320" y="125" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Sich.6 USB</text>
+    <text x="470" y="125" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Sich.7 Pump</text>
+    <text x="620" y="125" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Sich.8 Inv</text>
+    
+    <!-- Row 3 -->
+    <text x="170" y="150" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Sich.9-18...</text>
+    
+    <!-- Divider Line -->
+    <line x1="170" y1="170" x2="780" y2="170" stroke="#333333" stroke-width="1"/>
+    
+    <!-- Section: Tanks -->
+    <text x="170" y="195" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF">TANKS:</text>
+    
+    <text x="170" y="220" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Fresh: 85L (60%)</text>
+    <text x="420" y="220" font-family="Arial, sans-serif" font-size="14" fill="#FC00">🟠 Gray: 48L (70%)</text>
+    
+    <text x="170" y="245" font-family="Arial, sans-serif" font-size="14" fill="#F800">🔴 Black: 18L (90%)</text>
+    <text x="420" y="245" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 LPG: 8.5kg (85%)</text>
+    
+    <!-- Divider Line -->
+    <line x1="170" y1="265" x2="780" y2="265" stroke="#333333" stroke-width="1"/>
+    
+    <!-- Section: Electrical -->
+    <text x="170" y="290" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF">ELECTRICAL:</text>
+    
+    <text x="170" y="315" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Battery: 12.8V (78%)</text>
+    <text x="420" y="315" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Alternator: Charging</text>
+    
+    <text x="170" y="340" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Solar: 245W</text>
+    <text x="420" y="340" font-family="Arial, sans-serif" font-size="14" fill="#C618">⚪ Shore: Disconnected</text>
+    
+    <!-- Divider Line -->
+    <line x1="170" y1="360" x2="780" y2="360" stroke="#333333" stroke-width="1"/>
+    
+    <!-- Section: Climate -->
+    <text x="170" y="385" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#FFFFFF">CLIMATE:</text>
+    
+    <text x="170" y="410" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF">Indoor: 21.5°C</text>
+    <text x="420" y="410" font-family="Arial, sans-serif" font-size="14" fill="#FC00">🟠 Heater: ACTIVE</text>
+    
+    <text x="170" y="435" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF">Humidity: 55%</text>
+    <text x="420" y="435" font-family="Arial, sans-serif" font-size="14" fill="#07E0">🟢 Water Pump: OFF</text>
+  </g>
+  
+  <!-- Next Button -->
+  <rect x="720" y="440" width="60" height="30" rx="5" fill="none" stroke="#FFFFFF" stroke-width="1"/>
+  <text x="750" y="460" font-family="Arial, sans-serif" font-size="16" fill="#FFFFFF" text-anchor="middle">Next →</text>
+  
+  <!-- Frame -->
+  <rect x="0" y="0" width="800" height="480" fill="none" stroke="#333333" stroke-width="2"/>
+</svg>
