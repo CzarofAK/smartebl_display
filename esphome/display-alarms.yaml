@@ -1,0 +1,36 @@
+# ============================================
+# SmartEBL Display - Master Warning/Caution System
+# ============================================
+# Intelligent alarm prioritization
+
+globals:
+  - id: master_warning_active
+    type: bool
+    initial_value: 'false'
+
+script:
+  - id: check_alarms
+    mode: restart
+    then:
+      - lambda: |-
+          bool warning = false;
+          // Check sensors here
+          if (warning) {
+            id(nextion_display).set_component_text("txt_alert", "⚠️ MASTER WARNING");
+            id(nextion_display).set_component_value("txt_alert.pco", 63488);  // Red
+          } else {
+            id(nextion_display).set_component_text("txt_alert", "✓ ALL SYSTEMS NORMAL");
+            id(nextion_display).set_component_value("txt_alert.pco", 2016);  // Green
+          }
+
+interval:
+  - interval: 2s
+    then:
+      - script.execute: check_alarms
+
+binary_sensor:
+  - platform: template
+    id: battery_critical
+    lambda: return false;  # ← CUSTOMIZE
+    on_state:
+      - script.execute: check_alarms
