@@ -1,6 +1,6 @@
 # Display Mockups - SmartEBL Display
 
-Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
+Visual representation of Nextion display pages (7" - 800x480px)
 
 ---
 
@@ -16,11 +16,11 @@ Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
 │   Electric    │                                                     │
 │               │                                                     │
 │               │                                                     │
-│   Water       │              HAUPTMENÜ                              │
+│   Water       │              MAIN MENU                              │
 │               │                                                     │
 │               │         SmartEBL Display System                     │
 │   Climate     │                                                     │
-│               │      Wähle eine Sektion aus dem Menü               │
+│               │      Select a section from the menu                 │
 │               │                                                     │
 │   Status      │                                                     │
 │               │                                                     │
@@ -98,13 +98,13 @@ Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
 │                                                                     │
 ├───────────────┬─────────────────────────────────────────────────────┤
 │               │                                                     │
-│   Electric    │   SICHERUNGEN (FUSES)                               │
+│   Electric    │   FUSES                                             │
 │               │                                                     │
-│   Water       │   🔴 Sich.1 Main      🟢 Sich.2 Lights             │
-│               │   🟢 Sich.3 Water     🟢 Sich.4 Heater             │
-│   Climate     │   🔴 Sich.5 12V Aux   🟢 Sich.6 Fridge             │
-│               │   🟢 Sich.7 Pump      🟢 Sich.8 Outlet             │
-│ ━━Status━━    │   🟢 Sich.9 Climate   🟢 Sich.10 USB              │
+│   Water       │   🔴 Fuse.1 Main      🟢 Fuse.2 Lights             │
+│               │   🟢 Fuse.3 Water     🟢 Fuse.4 Heater             │
+│   Climate     │   🔴 Fuse.5 12V Aux   🟢 Fuse.6 Fridge             │
+│               │   🟢 Fuse.7 Pump      🟢 Fuse.8 Outlet             │
+│ ━━Status━━    │   🟢 Fuse.9 Climate   🟢 Fuse.10 USB              │
 │               │                                                     │
 │   Power       │   ELECTRICAL STATUS                                 │
 │               │   Battery:    12.8V (78%) 🟢                        │
@@ -150,9 +150,9 @@ Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
 
 ---
 
-## Master Warning State (Lauftext Beispiele)
+## Master Warning State (Scrolling Text Examples)
 
-### Normal State (Grün)
+### Normal State (Green)
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  ✓ ALL SYSTEMS NORMAL                                              │
@@ -166,7 +166,7 @@ Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### Master Warning (Rot)
+### Master Warning (Red)
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  ⚠️ MASTER WARNING                                                  │
@@ -193,9 +193,9 @@ Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
         │              │       │       │              │
         └──────────────┴───────┴───────┴──────────────┘
                           │
-                     Zurück zu 1
-                   (oder zu anderer
-                      Sektion)
+                     Back to 1
+                   (or to other
+                     section)
 ```
 
 ---
@@ -206,16 +206,16 @@ Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
 ```
 ┌───────────────┐
 │               │
-│   Electric    │  ← Weiß (65535)
+│   Electric    │  ← White (65535)
 │               │
 └───────────────┘
 ```
 
-### Active Menu Button (Aktuelle Sektion)
+### Active Menu Button (Current Section)
 ```
 ┌───────────────┐
 │               │
-│ ━━Electric━━  │  ← Grün (2016) + Underline
+│ ━━Electric━━  │  ← Green (2016) + Underline
 │               │
 └───────────────┘
 ```
@@ -224,13 +224,13 @@ Visuelle Darstellung der Nextion Display-Seiten (7" - 800x480px)
 
 ## Color Reference (in Mockups)
 
-| Symbol | Farbe | Bedeutung | Hex | Decimal |
-|--------|-------|-----------|-----|---------|
-| 🟢 | Grün | OK / Normal | #07E0 | 2016 |
-| 🟠 | Orange | Caution / Warnung | #FC00 | 64512 |
-| 🔴 | Rot | Warning / Kritisch | #F800 | 63488 |
-| ⚪ | Weiß | Text / Inaktiv | #FFFF | 65535 |
-| ━━ | Underline | Aktive Sektion | - | - |
+| Symbol | Color | Meaning | Hex | Decimal |
+|--------|-------|---------|-----|---------|
+| 🟢 | Green | OK / Normal | #07E0 | 2016 |
+| 🟠 | Orange | Caution / Warning | #FC00 | 64512 |
+| 🔴 | Red | Warning / Critical | #F800 | 63488 |
+| ⚪ | White | Text / Inactive | #FFFF | 65535 |
+| ━━ | Underline | Active Section | - | - |
 
 ---
 
@@ -267,28 +267,28 @@ Content Height: 430px
 ## Touch Areas
 
 ```
-Menu Buttons: 150x80 px (gut erreichbar)
-Next Button:  120x50 px (rechts unten)
-Alert Text:   800x50 px (oben, klickbar für Status)
+Menu Buttons: 150x80 px (easily accessible)
+Next Button:  120x50 px (bottom right)
+Alert Text:   800x50 px (top, clickable for status)
 ```
 
 ---
 
-## Anmerkungen
+## Notes
 
-1. **Transparentes Design**: Alle Komponenten haben `bco=65535` (transparent)
-2. **Scrolling Text**: Lauftext scrollt nur wenn Text > Display-Breite
-3. **Farbwechsel**: Dynamisch via ESPHome (pco ändern)
-4. **Symbole**: Unicode funktioniert in Nextion (✓ ⚠️ ⚡ 🟢 🔴)
-5. **Seiten-Zähler**: Immer rechts oben (1/2, 2/2)
-6. **Navigation**: Links = Sektionen, Rechts/Center = Seiten-Navigation
+1. **Transparent Design**: All components have `bco=65535` (transparent)
+2. **Scrolling Text**: Scrolls only when text > display width
+3. **Color Change**: Dynamic via ESPHome (change pco)
+4. **Symbols**: Unicode works in Nextion (✓ ⚠️ ⚡ 🟢 🔴)
+5. **Page Counter**: Always top right (1/2, 2/2)
+6. **Navigation**: Left = Sections, Right/Center = Page navigation
 
 ---
 
-## Für dein Nextion-Projekt
+## For Your Nextion Project
 
-1. Nutze diese Mockups als Referenz
-2. Erstelle Komponenten an den gezeigten Positionen
-3. Benenne Komponenten wie in ESPHome-Configs
-4. Teste Navigation-Flow
-5. Passe Content-Bereich für eigene Bedürfnisse an
+1. Use these mockups as reference
+2. Create components at shown positions
+3. Name components as in ESPHome configs
+4. Test navigation flow
+5. Adapt content area for your own needs

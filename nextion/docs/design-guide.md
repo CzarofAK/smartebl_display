@@ -1,78 +1,78 @@
 # Nextion Design Guide
 
-**Design-Prinzipien und Best Practices für SmartEBL Display**
+**Design Principles and Best Practices for SmartEBL Display**
 
 ---
 
-## Design-Philosophie
+## Design Philosophy
 
-### Inspiration: Luftfahrt-Cockpits
+### Inspiration: Aviation Cockpits
 
-Das Design ist inspiriert von **Boeing/Airbus Cockpit-Systemen**:
+The design is inspired by **Boeing/Airbus cockpit systems**:
 
-✅ **Klarheit** - Informationen auf einen Blick
-✅ **Priorisierung** - Wichtiges zuerst (Master Warning/Caution)
-✅ **Konsistenz** - Gleiche Elemente, gleiche Positionen
-✅ **Minimalismus** - Nur relevante Informationen
-✅ **Fehlertoleranz** - Eindeutige Bedienung
+✅ **Clarity** - Information at a glance
+✅ **Prioritization** - Important things first (Master Warning/Caution)
+✅ **Consistency** - Same elements, same positions
+✅ **Minimalism** - Only relevant information
+✅ **Fault Tolerance** - Unambiguous operation
 
 ---
 
-## Transparentes Design
+## Transparent Design
 
-### Warum transparent?
+### Why Transparent?
 
-- **Flexibel**: Funktioniert mit jedem Hintergrund/Wallpaper
-- **Modern**: Glassmorphism-Trend
-- **Ressourcen-schonend**: Keine großen Bilder nötig
-- **Anpassbar**: User können eigene Hintergründe nutzen
+- **Flexible**: Works with any background/wallpaper
+- **Modern**: Glassmorphism trend
+- **Resource-efficient**: No large images needed
+- **Customizable**: Users can use their own backgrounds
 
-### Implementierung
+### Implementation
 
-**Alle Komponenten:**
+**All Components:**
 ```
 bco=65535    // Background Color = Transparent
-pco=65535    // Text Color = Weiß (Standard)
+pco=65535    // Text Color = White (default)
 pco2=65535   // Press Color 2 = Transparent
 ```
 
-**Nur Text sichtbar, kein "Button-Rahmen"**
+**Only text visible, no "button frame"**
 
 ---
 
-## Farbsystem
+## Color System
 
-### Primärfarben
+### Primary Colors
 
-| Farbe | Hex | Decimal | RGB | Verwendung |
-|-------|-----|---------|-----|------------|
-| 🔴 Rot | `#F800` | 63488 | (248,0,0) | Master WARNING, kritische Alarme |
-| 🟠 Orange | `#FC00` | 64512 | (252,0,0) | Master CAUTION, Warnungen |
-| 🟢 Grün | `#07E0` | 2016 | (0,124,0) | Normal, OK, Aktiv |
-| ⚪ Weiß | `#FFFF` | 65535 | (255,255,255) | Text, Inaktiv |
-| 🔘 Grau | `#C618` | 50712 | (198,24,192) | Deaktiviert |
+| Color | Hex | Decimal | RGB | Usage |
+|-------|-----|---------|-----|-------|
+| 🔴 Red | `#F800` | 63488 | (248,0,0) | Master WARNING, critical alarms |
+| 🟠 Orange | `#FC00` | 64512 | (252,0,0) | Master CAUTION, warnings |
+| 🟢 Green | `#07E0` | 2016 | (0,124,0) | Normal, OK, Active |
+| ⚪ White | `#FFFF` | 65535 | (255,255,255) | Text, Inactive |
+| 🔘 Gray | `#C618` | 50712 | (198,24,192) | Disabled |
 
-### Farblogik
+### Color Logic
 
 **Buttons:**
-- Weiß (65535): Standard / Inaktiv
-- Grün (2016): Aktive Sektion
+- White (65535): Default / Inactive
+- Green (2016): Active section
 
-**Alarme:**
-- Grün (2016): OK
-- Orange (64512): Warnung (Caution)
-- Rot (63488): Kritisch (Warning)
+**Alarms:**
+- Green (2016): OK
+- Orange (64512): Warning (Caution)
+- Red (63488): Critical (Warning)
 
-**Lauftext:**
-- Grün: "✓ ALL SYSTEMS NORMAL"
+**Scrolling Text:**
+- Green: "✓ ALL SYSTEMS NORMAL"
 - Orange: "⚡ MASTER CAUTION"
-- Rot: "⚠️ MASTER WARNING"
+- Red: "⚠️ MASTER WARNING"
 
 ---
 
-## Layout-Prinzipien
+## Layout Principles
 
-### Grid-System (800x480)
+### Grid System (800x480)
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -91,78 +91,78 @@ pco2=65535   // Press Color 2 = Transparent
     0     150                                           800
 ```
 
-### Zonen
+### Zones
 
 1. **Header (y=0-50)**
-   - Lauftext links
-   - Seitenzähler rechts
+   - Scrolling text left
+   - Page counter right
 
 2. **Menu (x=0-150, y=50-480)**
-   - 5 Buttons vertikal
-   - Je 80px hoch, 10px Abstand
+   - 5 buttons vertically
+   - Each 80px high, 10px spacing
 
 3. **Content (x=150-800, y=50-480)**
-   - Frei gestaltbar
-   - Empfohlen: 20px Padding
+   - Freely designable
+   - Recommended: 20px padding
 
 ---
 
-## Typografie
+## Typography
 
-### Font-Hierarchie
+### Font Hierarchy
 
-| Font ID | Größe | Verwendung | Beispiel |
-|---------|-------|------------|----------|
-| Font 0 | 12pt | Feinschrift, Labels | "Voltage:" |
-| Font 1 | 16pt | Standard Text | "12.8V" |
-| Font 2 | 20pt | Buttons, wichtiger Text | "Electric" |
-| Font 3 | 24pt | Lauftext, Überschriften | "MASTER WARNING" |
-| Font 4 | 32pt | Große Werte, Zahlen | "78%" |
+| Font ID | Size | Usage | Example |
+|---------|------|-------|---------|
+| Font 0 | 12pt | Fine print, labels | "Voltage:" |
+| Font 1 | 16pt | Standard text | "12.8V" |
+| Font 2 | 20pt | Buttons, important text | "Electric" |
+| Font 3 | 24pt | Scrolling text, headings | "MASTER WARNING" |
+| Font 4 | 32pt | Large values, numbers | "78%" |
 
-### Font-Empfehlungen
+### Font Recommendations
 
-**Im Nextion Editor:**
+**In Nextion Editor:**
 1. File → Font Generator
-2. Wähle Font: **Roboto** oder **Arial** (gut lesbar)
-3. Erstelle Größen: 12, 16, 20, 24, 32pt
-4. **Anti-Aliasing**: Aktiviert (für glatte Kanten)
-5. **Format**: 8-bit für Farbe
+2. Choose Font: **Roboto** or **Arial** (highly readable)
+3. Create sizes: 12, 16, 20, 24, 32pt
+4. **Anti-Aliasing**: Enabled (for smooth edges)
+5. **Format**: 8-bit for color
 
 ---
 
-## Komponentengrößen
+## Component Sizes
 
 ### Buttons
 
-**Menu Buttons (vertikal):**
+**Menu Buttons (vertical):**
 - w=150, h=80
-- Abstand: 10px
+- Spacing: 10px
 
-**Action Buttons (z.B. "Next"):**
+**Action Buttons (e.g. "Next"):**
 - w=120, h=50
-- Position: Rechts unten (x=650, y=400)
+- Position: Bottom right (x=650, y=400)
 
-**Touch-Fläche**: Mindestens 60x60px für gute Bedienbarkeit
+**Touch Area**: Minimum 60x60px for good usability
 
-### Text-Komponenten
+### Text Components
 
-**Lauftext:**
-- h=50px (für 24pt Font + Padding)
-- Volle Breite (w=800) oder mit Reserve für Seitenzähler (w=650)
+**Scrolling Text:**
+- h=50px (for 24pt Font + Padding)
+- Full width (w=800) or with space for page counter (w=650)
 
-**Werte-Anzeige:**
+**Value Display:**
 - h=40-50px
-- w=je nach Bedarf
+- w=as needed
 
 **Labels:**
 - h=30px
-- Font 0 oder 1
+- Font 0 or 1
 
 ---
 
-## Navigation-Pattern
+## Navigation Pattern
 
-### Horizontale Navigation (zwischen Sektionen)
+### Horizontal Navigation (between Sections)
 
 ```
 Electric → Water → Climate → Status → Power
@@ -170,34 +170,34 @@ Electric → Water → Climate → Status → Power
 Electric_1 Water_1  Climate_1  Status_1 Power_1
 ```
 
-**Immer über Menu-Buttons links**
+**Always via Menu buttons on the left**
 
-### Vertikale Navigation (innerhalb Sektion)
+### Vertical Navigation (within Section)
 
 ```
 Electric_1
     ↓ (btn_next)
 Electric_2
-    ↓ (btn_next oder btn_electric)
+    ↓ (btn_next or btn_electric)
 Electric_1
 ```
 
 **Via:**
-- "Next →" Button
-- Erneutes Klicken auf Sektions-Button
+- "Next →" button
+- Clicking section button again
 
 ---
 
-## Seiten-Templates
+## Page Templates
 
-### Template 1: Standard Unterseite
+### Template 1: Standard Subpage
 
 ```
 ┌────────────────────────────────────────────────────────┐
 │ ✓ ALL SYSTEMS NORMAL                           1/2     │
 ├───────────┬─────────────────────────────────────────────┤
 │           │                                             │
-│ Electric  │  [TITEL]                                    │
+│ Electric  │  [TITLE]                                    │
 │           │                                             │
 │ Water     │  Label1: Value1                             │
 │           │  Label2: Value2                             │
@@ -210,15 +210,15 @@ Electric_1
 └───────────┴─────────────────────────────────────────────┘
 ```
 
-### Template 2: Status-Overview (Grid)
+### Template 2: Status Overview (Grid)
 
 ```
 ┌────────────────────────────────────────────────────────┐
 │ ⚠️ MASTER WARNING                              1/2     │
 ├───────────┬─────────────────────────────────────────────┤
-│           │  🔴 Sich.1   🟢 Sich.2   🟢 Sich.3         │
-│ Electric  │  🟢 Sich.4   🔴 Sich.5   🟢 Sich.6         │
-│           │  🟢 Sich.7   🟢 Sich.8   🟢 Sich.9         │
+│           │  🔴 Fuse.1   🟢 Fuse.2   🟢 Fuse.3         │
+│ Electric  │  🟢 Fuse.4   🔴 Fuse.5   🟢 Fuse.6         │
+│           │  🟢 Fuse.7   🟢 Fuse.8   🟢 Fuse.9         │
 │ Water     │                                             │
 │           │  TANK LEVELS                                │
 │ Climate   │  Fresh: 45L (60%) 🟢                        │
@@ -232,9 +232,9 @@ Electric_1
 
 ---
 
-## Icons & Symbole
+## Icons & Symbols
 
-### Unicode Symbole (funktionieren in Nextion)
+### Unicode Symbols (work in Nextion)
 
 ```
 ✓ Check Mark (OK)         U+2713
@@ -247,7 +247,7 @@ Electric_1
 ↓ Arrow Down             U+2193
 ```
 
-### Verwendung
+### Usage
 
 ```
 txt_alert.txt="✓ ALL SYSTEMS NORMAL"
@@ -255,55 +255,55 @@ txt_alert.txt="⚠️ MASTER WARNING"
 txt_status.txt="🟢 OK"
 ```
 
-**Tipp**: Teste im Nextion Editor ob Font die Symbole unterstützt!
+**Tip**: Test in Nextion Editor if font supports the symbols!
 
 ---
 
 ## Animation & Feedback
 
-### Touch-Feedback
+### Touch Feedback
 
 **Standard:**
-- Press Color (pco2) = Gleiche Farbe wie pco (kein Feedback)
-- Oder: pco2 = Leicht heller für subtiles Feedback
+- Press Color (pco2) = Same color as pco (no feedback)
+- Or: pco2 = Slightly lighter for subtle feedback
 
 **Alternative:**
-- Sound-Feedback via `click` Befehl im Touch Event
+- Sound feedback via `click` command in Touch Event
 
 ### Scrolling Text
 
 ```
-dis=1        // Scrolling aktiviert
+dis=1        // Scrolling enabled
 tim=50       // Speed (50 = medium)
 dir=0        // Left-to-right
 ```
 
 **Best Practice:**
-- Nur für Lauftext (Alarme)
-- Nicht für normale Werte (verwirrt User)
+- Only for scrolling text (alarms)
+- Not for normal values (confuses user)
 
 ---
 
 ## Responsive Content
 
-### Verschiedene Display-Größen
+### Different Display Sizes
 
-Dieses Design ist für **7" (800x480)**.
+This design is for **7" (800x480)**.
 
-**Für andere Größen:**
+**For Other Sizes:**
 
-| Display | Resolution | Anpassungen |
+| Display | Resolution | Adjustments |
 |---------|------------|-------------|
-| 3.5" | 480x320 | Menu schmaler (100px), Font kleiner |
-| 5" | 800x480 | 1:1 verwendbar |
-| 7" | 800x480 | Perfekt (Original) |
-| 10.1" | 1024x600 | Content Area größer, Fonts größer |
+| 3.5" | 480x320 | Menu narrower (100px), fonts smaller |
+| 5" | 800x480 | 1:1 usable |
+| 7" | 800x480 | Perfect (Original) |
+| 10.1" | 1024x600 | Content area larger, fonts larger |
 
-### Skalierungsfaktoren
+### Scaling Factors
 
 ```
 Menu Width:     800x480 → 150px  |  1024x600 → 200px
-Font Basis:     800x480 → 16pt   |  1024x600 → 20pt
+Base Font:      800x480 → 16pt   |  1024x600 → 20pt
 Button Height:  800x480 → 80px   |  1024x600 → 100px
 ```
 
@@ -311,130 +311,130 @@ Button Height:  800x480 → 80px   |  1024x600 → 100px
 
 ## Accessibility
 
-### Lesbarkeit
+### Readability
 
-✅ **Kontrast**: Weiß auf Schwarz/Dunkel = Optimal
-✅ **Font-Größe**: Min. 16pt für Lesbarkeit bei Tageslicht
-✅ **Touch-Ziele**: Min. 60x60px für Finger-Bedienung
+✅ **Contrast**: White on Black/Dark = Optimal
+✅ **Font Size**: Min. 16pt for readability in daylight
+✅ **Touch Targets**: Min. 60x60px for finger operation
 
-### Farbblindheit
+### Color Blindness
 
-**Protanopie/Deuteranopie (Rot-Grün-Schwäche):**
+**Protanopia/Deuteranopia (Red-Green Weakness):**
 
-Problem: Rot/Grün nicht unterscheidbar
+Problem: Red/Green not distinguishable
 
-**Lösung:**
-- Zusätzlich Symbole nutzen: ⚠️ + 🔴
-- Text-Labels: "WARNING" statt nur Farbe
+**Solution:**
+- Additionally use symbols: ⚠️ + 🔴
+- Text labels: "WARNING" instead of just color
 
 ---
 
-## Performance-Tipps
+## Performance Tips
 
-### Optimierung
+### Optimization
 
-**Weniger Updates = Bessere Performance**
+**Fewer Updates = Better Performance**
 
-❌ **Schlecht:**
+❌ **Bad:**
 ```c
-// Im Timer (jede Sekunde)
+// In timer (every second)
 txt_value.txt="12.8"
 ```
 
-✅ **Gut:**
+✅ **Good:**
 ```c
-// Nur bei Änderung (via ESPHome)
+// Only on change (via ESPHome)
 if(new_value!=old_value)
 {
   txt_value.txt=new_value
 }
 ```
 
-### Bild-Dateien vermeiden
+### Avoid Image Files
 
-**Transparent-Design = Keine großen Hintergrundbilder**
+**Transparent Design = No large background images**
 
-→ Schnellere Ladezeiten
-→ Weniger Flash-Speicher
-
----
-
-## Konsistenz-Checkliste
-
-Beim Erstellen neuer Seiten:
-
-- [ ] Lauftext an gleicher Position (y=0)
-- [ ] Menu-Buttons an gleicher Position (x=0, y=50-480)
-- [ ] Seitenzähler an gleicher Position (x=700, y=10)
-- [ ] Gleiche Fonts für gleiche Elemente
-- [ ] Transparente Hintergründe (bco=65535)
-- [ ] Touch Events folgen gleichem Muster
-- [ ] Page Preinit setzt Button-Highlighting
+→ Faster load times
+→ Less flash memory
 
 ---
 
-## Common Mistakes (Häufige Fehler)
+## Consistency Checklist
 
-### ❌ Fehler 1: Zu viel auf einer Seite
+When creating new pages:
 
-**Problem**: User überfordert mit 20+ Werten auf einer Seite
-
-**Lösung**: Mehrere Unterseiten, logisch gruppiert
-
----
-
-### ❌ Fehler 2: Inkonsistente Farben
-
-**Problem**: Rot bedeutet mal "Alarm", mal "Aktiv"
-
-**Lösung**: Farbschema einhalten (siehe oben)
+- [ ] Scrolling text at same position (y=0)
+- [ ] Menu buttons at same position (x=0, y=50-480)
+- [ ] Page counter at same position (x=700, y=10)
+- [ ] Same fonts for same elements
+- [ ] Transparent backgrounds (bco=65535)
+- [ ] Touch events follow same pattern
+- [ ] Page Preinit sets button highlighting
 
 ---
 
-### ❌ Fehler 3: Zu kleine Touch-Ziele
+## Common Mistakes
 
-**Problem**: Buttons schwer zu treffen beim Fahren
+### ❌ Mistake 1: Too Much on One Page
 
-**Lösung**: Min. 60x60px, besser 80x80px
+**Problem**: User overwhelmed with 20+ values on one page
 
----
-
-### ❌ Fehler 4: Fehlende Rückmeldung
-
-**Problem**: User weiß nicht ob Touch registriert wurde
-
-**Lösung**: Page-Wechsel als Feedback oder Sound
+**Solution**: Multiple subpages, logically grouped
 
 ---
 
-## Design-Workflow
+### ❌ Mistake 2: Inconsistent Colors
 
-### Empfohlene Reihenfolge
+**Problem**: Red sometimes means "Alarm", sometimes "Active"
 
-1. **Wireframe** (Papier/Whiteboard)
-   - Skizziere Layout
-   - Definiere Navigation
+**Solution**: Stick to color scheme (see above)
 
-2. **Prototyp** (Nextion Editor)
-   - Erstelle Page 0 (Home)
-   - Test Navigation-Konzept
+---
 
-3. **Template erstellen**
-   - Perfektioniere eine Unterseite
-   - Kopiere als Template
+### ❌ Mistake 3: Touch Targets Too Small
 
-4. **Iterieren**
-   - Fülle alle Seiten
-   - Teste auf echtem Display
+**Problem**: Buttons hard to hit while driving
+
+**Solution**: Min. 60x60px, better 80x80px
+
+---
+
+### ❌ Mistake 4: Missing Feedback
+
+**Problem**: User doesn't know if touch was registered
+
+**Solution**: Page change as feedback or sound
+
+---
+
+## Design Workflow
+
+### Recommended Sequence
+
+1. **Wireframe** (Paper/Whiteboard)
+   - Sketch layout
+   - Define navigation
+
+2. **Prototype** (Nextion Editor)
+   - Create Page 0 (Home)
+   - Test navigation concept
+
+3. **Create Template**
+   - Perfect one subpage
+   - Copy as template
+
+4. **Iterate**
+   - Fill all pages
+   - Test on real display
 
 5. **ESPHome Integration**
-   - Verbinde mit echten Daten
+   - Connect with real data
 
-6. **Feedback & Anpassen**
+6. **Feedback & Adjust**
 
 ---
 
-## Weitere Ressourcen
+## Further Resources
 
 - **Nextion Instruction Set**: [https://nextion.tech/instruction-set/](https://nextion.tech/instruction-set/)
 - **Nextion Forum**: [https://forum.nextion.tech/](https://forum.nextion.tech/)
@@ -442,14 +442,14 @@ Beim Erstellen neuer Seiten:
 
 ---
 
-## Zusammenfassung
+## Summary
 
-**5 Kern-Prinzipien:**
+**5 Core Principles:**
 
-1. 🎨 **Transparent & Minimalistisch**
-2. 🚨 **Klare Alarm-Hierarchie**
-3. 🎯 **Konsistente Navigation**
-4. 📏 **Grid-basiertes Layout**
-5. ♿ **Accessibility beachten**
+1. 🎨 **Transparent & Minimalist**
+2. 🚨 **Clear Alarm Hierarchy**
+3. 🎯 **Consistent Navigation**
+4. 📏 **Grid-based Layout**
+5. ♿ **Consider Accessibility**
 
-**Befolge diese Prinzipien → Professionelles, nutzbares Display!**
+**Follow These Principles → Professional, Usable Display!**

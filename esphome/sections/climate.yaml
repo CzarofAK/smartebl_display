@@ -1,25 +1,25 @@
 # ============================================
 # SmartEBL Display - Climate Section
 # ============================================
-# Template für Klima-Systeme (Heizung, Klima, Lüftung)
+# Template for climate systems (heating, AC, ventilation)
 #
-# Import in deine main.yaml:
+# Import in your main.yaml:
 #   packages:
 #     climate: github://CzarofAK/smartebl_display/esphome/sections/climate.yaml@main
 
 # ============================================
-# TEMPLATE - ANPASSEN ERFORDERLICH!
+# TEMPLATE - CUSTOMIZATION REQUIRED!
 # ============================================
 
 # ============================================
-# TEMPERATUREN
+# TEMPERATURES
 # ============================================
 
 sensor:
-  # Innentemperatur
+  # Interior Temperature
   - platform: homeassistant
     id: temperature_inside
-    entity_id: sensor.interior_temperature  # ← ANPASSEN
+    entity_id: sensor.interior_temperature  # ← CUSTOMIZE
     name: "Temperature Inside"
     unit_of_measurement: "°C"
     on_value:
@@ -28,11 +28,11 @@ sensor:
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.1f°C", x);
             id(nextion_display).set_component_text("temp_inside", buffer);
-  
-  # Außentemperatur
+
+  # Exterior Temperature
   - platform: homeassistant
     id: temperature_outside
-    entity_id: sensor.exterior_temperature  # ← ANPASSEN
+    entity_id: sensor.exterior_temperature  # ← CUSTOMIZE
     name: "Temperature Outside"
     unit_of_measurement: "°C"
     on_value:
@@ -41,11 +41,11 @@ sensor:
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.1f°C", x);
             id(nextion_display).set_component_text("temp_outside", buffer);
-  
-  # Luftfeuchtigkeit
+
+  # Humidity
   - platform: homeassistant
     id: humidity_inside
-    entity_id: sensor.interior_humidity  # ← ANPASSEN
+    entity_id: sensor.interior_humidity  # ← CUSTOMIZE
     name: "Humidity"
     unit_of_measurement: "%"
     on_value:
@@ -54,26 +54,26 @@ sensor:
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.0f%%", x);
             id(nextion_display).set_component_text("humidity", buffer);
-            
-            // Farbe: Rot wenn zu feucht (> 70%)
+
+            // Color: Red if too humid (> 70%)
             int color = (x > 70) ? 63488 : 2016;
             id(nextion_display).set_component_value("humidity.pco", color);
 
 # ============================================
-# HEIZUNG
+# HEATING
 # ============================================
 
 climate:
-  # Heizung (Climate Entity)
+  # Heater (Climate Entity)
   - platform: homeassistant
     id: heater
-    entity_id: climate.heater  # ← ANPASSEN
+    entity_id: climate.heater  # ← CUSTOMIZE
 
 binary_sensor:
-  # Heizung aktiv
+  # Heater Active
   - platform: homeassistant
     id: heater_active
-    entity_id: binary_sensor.heater_active  # ← ANPASSEN
+    entity_id: binary_sensor.heater_active  # ← CUSTOMIZE
     on_press:
       then:
         - lambda: |-
@@ -83,37 +83,37 @@ binary_sensor:
       then:
         - lambda: |-
             id(nextion_display).set_component_text("heater_status", "Off");
-            id(nextion_display).set_component_value("heater_status.pco", 50712);  // Grau
+            id(nextion_display).set_component_value("heater_status.pco", 50712);  // Gray
 
 # ============================================
-# KLIMA / LÜFTUNG
+# AC / VENTILATION
 # ============================================
 
 switch:
-  # Ventilator
+  # Ventilation Fan
   - platform: homeassistant
     id: ventilation
-    entity_id: switch.ventilation  # ← ANPASSEN
+    entity_id: switch.ventilation  # ← CUSTOMIZE
 
 # ============================================
-# NEXTION KOMPONENTEN (Referenz)
+# NEXTION COMPONENTS (Reference)
 # ============================================
 #
-# Auf Climate_1 Page benötigt:
-# - Text "temp_inside"     → Innentemperatur
-# - Text "temp_outside"    → Außentemperatur
-# - Text "humidity"        → Luftfeuchtigkeit
-# - Text "heater_status"   → Heizung Status
+# Required on Climate_1 Page:
+# - Text "temp_inside"     → Interior Temperature
+# - Text "temp_outside"    → Exterior Temperature
+# - Text "humidity"        → Humidity
+# - Text "heater_status"   → Heater Status
 #
-# Optional auf Climate_2:
-# - Slider "heater_target" → Ziel-Temperatur
-# - Button "btn_vent"      → Lüftung Ein/Aus
+# Optional on Climate_2:
+# - Slider "heater_target" → Target Temperature
+# - Button "btn_vent"      → Ventilation On/Off
 
 # ============================================
-# HINWEISE FÜR ANPASSUNG
+# CUSTOMIZATION NOTES
 # ============================================
 #
-# 1. Ersetze alle entity_id mit deinen Home Assistant Entities
-# 2. Füge Klimaanlage hinzu falls vorhanden
-# 3. Optional: Steuerung für Temperatur-Sollwert
-# 4. Optional: Lüftungs-Geschwindigkeit
+# 1. Replace all entity_id with your Home Assistant Entities
+# 2. Add AC if available
+# 3. Optional: Add control for temperature setpoint
+# 4. Optional: Ventilation speed control
