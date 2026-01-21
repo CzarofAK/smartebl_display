@@ -1,34 +1,34 @@
 # ============================================
 # SmartEBL Display - Electric Section
 # ============================================
-# Modulare Electric-Sektion für Batterie, Solar, Shore Power
+# Modular Electric section for Battery, Solar, Shore Power
 #
-# Import in deine main.yaml:
+# Import in your main.yaml:
 #   packages:
 #     electric: github://CzarofAK/smartebl_display/esphome/sections/electric.yaml@main
 
 # ============================================
-# SENSOREN (ANPASSEN!)
+# SENSORS (CUSTOMIZE!)
 # ============================================
 
 sensor:
-  # Batterie Spannung
+  # Battery Voltage
   - platform: homeassistant
     id: batterie_spannung
-    entity_id: sensor.battery_voltage  # ← ANPASSEN
+    entity_id: sensor.battery_voltage  # ← CUSTOMIZE
     internal: false
     on_value:
       then:
         - lambda: |-
-            // Update Nextion Display (nur wenn auf Electric Page)
+            // Update Nextion Display (only when on Electric Page)
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.1fV", x);
             id(nextion_display).set_component_text("bat_volt", buffer);
-  
-  # Batterie Strom
+
+  # Battery Current
   - platform: homeassistant
     id: batterie_strom
-    entity_id: sensor.battery_current  # ← ANPASSEN
+    entity_id: sensor.battery_current  # ← CUSTOMIZE
     internal: false
     on_value:
       then:
@@ -36,11 +36,11 @@ sensor:
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.1fA", x);
             id(nextion_display).set_component_text("bat_current", buffer);
-  
-  # Batterie State of Charge (SOC)
+
+  # Battery State of Charge (SOC)
   - platform: homeassistant
     id: batterie_soc
-    entity_id: sensor.battery_soc  # ← ANPASSEN
+    entity_id: sensor.battery_soc  # ← CUSTOMIZE
     internal: false
     on_value:
       then:
@@ -48,20 +48,20 @@ sensor:
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.0f%%", x);
             id(nextion_display).set_component_text("bat_soc", buffer);
-            
-            // Farbe ändern basierend auf SOC
-            int color = 2016;  // Grün
+
+            // Change color based on SOC
+            int color = 2016;  // Green
             if (x < 20) {
-              color = 63488;  // Rot (kritisch)
+              color = 63488;  // Red (critical)
             } else if (x < 40) {
-              color = 64512;  // Orange (niedrig)
+              color = 64512;  // Orange (low)
             }
             id(nextion_display).set_component_value("bat_soc.pco", color);
-  
-  # Solar Leistung
+
+  # Solar Power
   - platform: homeassistant
     id: solar_leistung
-    entity_id: sensor.solar_power  # ← ANPASSEN
+    entity_id: sensor.solar_power  # ← CUSTOMIZE
     internal: false
     on_value:
       then:
@@ -69,11 +69,11 @@ sensor:
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.0fW", x);
             id(nextion_display).set_component_text("solar_power", buffer);
-  
-  # Shore Power (Landstrom) Status
+
+  # Shore Power Status
   - platform: homeassistant
     id: shore_power_strom
-    entity_id: sensor.shore_power_current  # ← ANPASSEN
+    entity_id: sensor.shore_power_current  # ← CUSTOMIZE
     internal: false
     on_value:
       then:
@@ -81,11 +81,11 @@ sensor:
             char buffer[10];
             snprintf(buffer, sizeof(buffer), "%.1fA", x);
             id(nextion_display).set_component_text("shore_current", buffer);
-  
-  # Alternator (Lichtmaschine) Leistung
+
+  # Alternator Power
   - platform: homeassistant
     id: alternator_leistung
-    entity_id: sensor.alternator_power  # ← ANPASSEN
+    entity_id: sensor.alternator_power  # ← CUSTOMIZE
     internal: false
     on_value:
       then:
@@ -95,91 +95,91 @@ sensor:
             id(nextion_display).set_component_text("alt_power", buffer);
 
 # ============================================
-# BINARY SENSOREN
+# BINARY SENSORS
 # ============================================
 
 binary_sensor:
   # Shore Power Connected
   - platform: homeassistant
     id: shore_power_connected
-    entity_id: binary_sensor.shore_power_connected  # ← ANPASSEN
+    entity_id: binary_sensor.shore_power_connected  # ← CUSTOMIZE
     on_press:
       then:
         - lambda: |-
             id(nextion_display).set_component_text("shore_status", "Connected");
-            id(nextion_display).set_component_value("shore_status.pco", 2016);  // Grün
+            id(nextion_display).set_component_value("shore_status.pco", 2016);  // Green
     on_release:
       then:
         - lambda: |-
             id(nextion_display).set_component_text("shore_status", "Disconnected");
-            id(nextion_display).set_component_value("shore_status.pco", 50712);  // Grau
-  
-  # Alternator Aktiv
+            id(nextion_display).set_component_value("shore_status.pco", 50712);  // Gray
+
+  # Alternator Active
   - platform: homeassistant
     id: alternator_aktiv
-    entity_id: binary_sensor.alternator_active  # ← ANPASSEN
+    entity_id: binary_sensor.alternator_active  # ← CUSTOMIZE
     on_press:
       then:
         - lambda: |-
             id(nextion_display).set_component_text("alt_status", "Charging");
-            id(nextion_display).set_component_value("alt_status.pco", 2016);  // Grün
+            id(nextion_display).set_component_value("alt_status.pco", 2016);  // Green
     on_release:
       then:
         - lambda: |-
             id(nextion_display).set_component_text("alt_status", "Idle");
-            id(nextion_display).set_component_value("alt_status.pco", 50712);  // Grau
+            id(nextion_display).set_component_value("alt_status.pco", 50712);  // Gray
 
 # ============================================
-# SCHALTER (optional)
+# SWITCHES (optional)
 # ============================================
 
 switch:
-  # Beispiel: Inverter Ein/Aus
+  # Example: Inverter On/Off
   - platform: homeassistant
     id: inverter_switch
-    entity_id: switch.inverter  # ← ANPASSEN
-    
-  # Beispiel: Shore Power Auto/Manual
+    entity_id: switch.inverter  # ← CUSTOMIZE
+
+  # Example: Shore Power Auto/Manual
   - platform: homeassistant
     id: shore_power_mode
-    entity_id: switch.shore_power_auto  # ← ANPASSEN
+    entity_id: switch.shore_power_auto  # ← CUSTOMIZE
 
 # ============================================
-# NEXTION KOMPONENTEN (Referenz)
+# NEXTION COMPONENTS (Reference)
 # ============================================
-# 
-# Auf Electric_1 Page benötigt:
-# - Text "bat_volt"      → Batterie Spannung
-# - Text "bat_current"   → Batterie Strom
-# - Text "bat_soc"       → Batterie SOC
-# - Text "solar_power"   → Solar Leistung
-# - Text "shore_current" → Shore Power Strom
+#
+# Required on Electric_1 Page:
+# - Text "bat_volt"      → Battery Voltage
+# - Text "bat_current"   → Battery Current
+# - Text "bat_soc"       → Battery SOC
+# - Text "solar_power"   → Solar Power
+# - Text "shore_current" → Shore Power Current
 # - Text "shore_status"  → Shore Power Status Text
-# - Text "alt_power"     → Alternator Leistung
+# - Text "alt_power"     → Alternator Power
 # - Text "alt_status"    → Alternator Status Text
 #
-# Auf Electric_2 Page (optional, für weitere Details):
-# - Number "bat_temp"    → Batterie Temperatur
+# On Electric_2 Page (optional, for more details):
+# - Number "bat_temp"    → Battery Temperature
 # - Text "inverter_status"
-# - Dual-state Button für Inverter On/Off
+# - Dual-state Button for Inverter On/Off
 # - etc.
 
 # ============================================
-# HINWEISE FÜR ANPASSUNG
+# CUSTOMIZATION NOTES
 # ============================================
 #
-# 1. Ersetze alle entity_id mit deinen Home Assistant Entities
+# 1. Replace all entity_id with your Home Assistant Entities
 #
-# 2. Füge weitere Sensoren hinzu nach gleichem Muster:
+# 2. Add more sensors following the same pattern:
 #    - platform: homeassistant
-#      id: mein_sensor
-#      entity_id: sensor.mein_sensor
+#      id: my_sensor
+#      entity_id: sensor.my_sensor
 #      on_value:
 #        - lambda: |-
 #            id(nextion_display).set_component_text("nextion_component", to_string(x).c_str());
 #
-# 3. Passe Nextion Komponenten-Namen an (z.B. "bat_volt" → dein Name)
+# 3. Customize Nextion component names (e.g. "bat_volt" → your name)
 #
-# 4. Erweitere Electric_2 Page mit zusätzlichen Details
+# 4. Extend Electric_2 Page with additional details
 #
-# 5. Optional: Füge Buttons für Steuerung hinzu (z.B. Inverter On/Off)
+# 5. Optional: Add buttons for control (e.g. Inverter On/Off)

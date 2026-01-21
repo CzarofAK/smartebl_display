@@ -1,23 +1,23 @@
 # ============================================
 # SmartEBL Display - Full Configuration Example
 # ============================================
-# Komplettes Beispiel für ESP32 mit Nextion Display
+# Complete example for ESP32 with Nextion Display
 #
-# ANLEITUNG:
-# 1. Kopiere diese Datei zu deinem ESPHome Verzeichnis
-# 2. Benenne um zu "motorhome-display.yaml"
-# 3. Passe substitutions und entity_id an
-# 4. Flash auf ESP32
+# INSTRUCTIONS:
+# 1. Copy this file to your ESPHome directory
+# 2. Rename to "motorhome-display.yaml"
+# 3. Customize substitutions and entity_id
+# 4. Flash to ESP32
 
 # ============================================
-# SUBSTITUTIONS (ANPASSEN!)
+# SUBSTITUTIONS (CUSTOMIZE!)
 # ============================================
 
 substitutions:
   device_name: motorhome-display
   friendly_name: "Motorhome Display"
-  
-  # UART Pins für Nextion (ANPASSEN!)
+
+  # UART Pins for Nextion (CUSTOMIZE!)
   nextion_tx_pin: GPIO17
   nextion_rx_pin: GPIO16
 
@@ -28,17 +28,17 @@ substitutions:
 esphome:
   name: ${device_name}
   friendly_name: ${friendly_name}
-  
-  # Optional: Beim Boot Status-Check ausführen
+
+  # Optional: Execute status check on boot
   on_boot:
     priority: -100
     then:
       - script.execute: check_alarms
       - lambda: |-
-          ESP_LOGI("main", "SmartEBL Display gestartet!");
+          ESP_LOGI("main", "SmartEBL Display started!");
 
 esp32:
-  board: esp32dev  # ← ANPASSEN für dein Board
+  board: esp32dev  # ← CUSTOMIZE for your board
   framework:
     type: arduino
 
@@ -49,7 +49,7 @@ esp32:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  
+
   # Fallback Hotspot
   ap:
     ssid: "${device_name} Fallback"
@@ -74,63 +74,63 @@ web_server:
 # ============================================
 
 logger:
-  level: INFO  # DEBUG für mehr Details
-  baud_rate: 0  # UART wird von Nextion genutzt!
+  level: INFO  # DEBUG for more details
+  baud_rate: 0  # UART is used by Nextion!
 
 # ============================================
-# PACKAGES (Modulares System)
+# PACKAGES (Modular System)
 # ============================================
 
 packages:
-  # Basis: ESP32 + Nextion UART
+  # Base: ESP32 + Nextion UART
   display_base: !include display-base.yaml
-  
+
   # Master Warning/Caution System
   alarms: !include display-alarms.yaml
-  
-  # Sektionen (nur aktivieren was du brauchst!)
+
+  # Sections (only enable what you need!)
   electric: !include sections/electric.yaml
   status: !include sections/status.yaml
-  
-  # Optional: Weitere Sektionen
+
+  # Optional: Additional sections
   # water: !include sections/water.yaml
   # climate: !include sections/climate.yaml
   # power: !include sections/power.yaml
 
 # ============================================
-# EIGENE SENSOREN (ANPASSEN!)
+# CUSTOM SENSORS (CUSTOMIZE!)
 # ============================================
-# Hier kannst du eigene Sensoren hinzufügen die nicht in Packages sind
+# Add your own sensors that are not in packages
 
 sensor:
-  # Beispiel: Interner Temperatursensor
+  # Example: Internal Temperature Sensor
   - platform: homeassistant
     id: internal_temperature
     entity_id: sensor.internal_temperature
     internal: false
-    
+
 # ============================================
-# EIGENE BINARY SENSOREN
+# CUSTOM BINARY SENSORS
 # ============================================
 
 binary_sensor:
-  # Beispiel: Türkontakt
+  # Example: Door Contact
   - platform: homeassistant
     id: door_open
     entity_id: binary_sensor.door_contact
     on_press:
       then:
         - lambda: |-
-            ESP_LOGI("door", "Tür geöffnet!");
+            ESP_LOGI("door", "Door opened!");
             // Optional: Nextion Update
             // id(nextion_display).set_component_text("door_status", "OPEN");
 
 # ============================================
-# SCHALTER
+# SWITCHES
 # ============================================
 
 switch:
-  # Beispiel: Licht schalten
+  # Example: Control Interior Light
   - platform: homeassistant
     id: interior_light
     entity_id: switch.interior_light
@@ -140,66 +140,66 @@ switch:
 # ============================================
 
 script:
-  # Beispiel: Night Mode
+  # Example: Night Mode
   - id: night_mode
     then:
       - lambda: |-
-          // Reduziere Display-Helligkeit nachts
+          // Reduce display brightness at night
           id(nextion_display).set_backlight_brightness(0.3);
-          ESP_LOGI("main", "Night mode aktiviert");
+          ESP_LOGI("main", "Night mode activated");
 
 # ============================================
 # AUTOMATIONS (optional)
 # ============================================
 
-# Beispiel: Auto Night Mode
+# Example: Auto Night Mode
 time:
   - platform: homeassistant
     id: ha_time
     on_time:
-      # Um 22:00 → Night Mode
+      # At 22:00 → Night Mode
       - hours: 22
         minutes: 0
         then:
           - script.execute: night_mode
-      
-      # Um 07:00 → Normal Mode
+
+      # At 07:00 → Normal Mode
       - hours: 7
         minutes: 0
         then:
           - lambda: |-
               id(nextion_display).set_backlight_brightness(0.8);
-              ESP_LOGI("main", "Day mode aktiviert");
+              ESP_LOGI("main", "Day mode activated");
 
 # ============================================
-# STATUS LED (optional, wenn ESP32 LED hat)
+# STATUS LED (optional, if ESP32 has LED)
 # ============================================
 
 light:
   - platform: status_led
     name: "${device_name} Status LED"
-    pin: GPIO2  # ← ANPASSEN
+    pin: GPIO2  # ← CUSTOMIZE
 
 # ============================================
-# HINWEISE
+# NOTES
 # ============================================
 #
-# 1. Secrets in secrets.yaml eintragen:
-#    wifi_ssid: "Dein_WiFi"
-#    wifi_password: "DeinPasswort"
-#    api_encryption_key: "32-Zeichen-Key"
-#    ota_password: "DeinOTAPassword"
+# 1. Add secrets to secrets.yaml:
+#    wifi_ssid: "Your_WiFi"
+#    wifi_password: "YourPassword"
+#    api_encryption_key: "32-Character-Key"
+#    ota_password: "YourOTAPassword"
 #    ap_password: "Fallback-Password"
 #
-# 2. Display-Base GPIO Pins anpassen:
-#    In display-base.yaml oder via Substitutions oben
+# 2. Customize Display Base GPIO Pins:
+#    In display-base.yaml or via Substitutions above
 #
-# 3. Packages aktivieren:
-#    Kommentiere Zeilen ein/aus je nach Bedarf
+# 3. Enable Packages:
+#    Comment/uncomment lines as needed
 #
-# 4. Entity IDs ersetzen:
-#    In den Package-Files (electric.yaml, status.yaml, etc.)
-#    oder hier eigene Sensoren hinzufügen
+# 4. Replace Entity IDs:
+#    In the package files (electric.yaml, status.yaml, etc.)
+#    or add your own sensors here
 #
 # 5. Testing:
 #    esphome logs motorhome-display.yaml
