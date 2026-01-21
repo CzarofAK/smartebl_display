@@ -1,0 +1,152 @@
+# ============================================
+# SmartEBL Display - Power Section
+# ============================================
+# Template für Energie-Management (Verbrauch, Erzeugung, etc.)
+#
+# Import in deine main.yaml:
+#   packages:
+#     power: github://CzarofAK/smartebl_display/esphome/sections/power.yaml@main
+
+# ============================================
+# TEMPLATE - ANPASSEN ERFORDERLICH!
+# ============================================
+
+# ============================================
+# ENERGIE-SENSOREN
+# ============================================
+
+sensor:
+  # Gesamtverbrauch aktuell
+  - platform: homeassistant
+    id: power_consumption
+    entity_id: sensor.total_power  # ← ANPASSEN
+    name: "Power Consumption"
+    unit_of_measurement: "W"
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.0fW", x);
+            id(nextion_display).set_component_text("power_cons", buffer);
+  
+  # Energie-Erzeugung (Solar + Alternator)
+  - platform: homeassistant
+    id: power_generation
+    entity_id: sensor.total_generation  # ← ANPASSEN
+    name: "Power Generation"
+    unit_of_measurement: "W"
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.0fW", x);
+            id(nextion_display).set_component_text("power_gen", buffer);
+  
+  # Netto (Erzeugung - Verbrauch)
+  - platform: template
+    id: power_net
+    lambda: |-
+      return id(power_generation).state - id(power_consumption).state;
+    update_interval: 5s
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[15];
+            if (x > 0) {
+              snprintf(buffer, sizeof(buffer), "+%.0fW", x);
+            } else {
+              snprintf(buffer, sizeof(buffer), "%.0fW", x);
+            }
+            id(nextion_display).set_component_text("power_net", buffer);
+            
+            // Farbe: Grün wenn positiv, Rot wenn negativ
+            int color = (x >= 0) ? 2016 : 63488;
+            id(nextion_display).set_component_value("power_net.pco", color);
+  
+  # Energie heute (kWh)
+  - platform: homeassistant
+    id: energy_today
+    entity_id: sensor.energy_today  # ← ANPASSEN
+    name: "Energy Today"
+    unit_of_measurement: "kWh"
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.1fkWh", x);
+            id(nextion_display).set_component_text("energy_today", buffer);
+
+# ============================================
+# VERBRAUCHER (TOP 5)
+# ============================================
+
+sensor:
+  # Kühlschrank
+  - platform: homeassistant
+    id: power_fridge
+    entity_id: sensor.fridge_power  # ← ANPASSEN
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.0fW", x);
+            id(nextion_display).set_component_text("cons_fridge", buffer);
+  
+  # Heizung
+  - platform: homeassistant
+    id: power_heater
+    entity_id: sensor.heater_power  # ← ANPASSEN
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.0fW", x);
+            id(nextion_display).set_component_text("cons_heater", buffer);
+  
+  # Wasserpumpe
+  - platform: homeassistant
+    id: power_pump
+    entity_id: sensor.pump_power  # ← ANPASSEN
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.0fW", x);
+            id(nextion_display).set_component_text("cons_pump", buffer);
+  
+  # Inverter
+  - platform: homeassistant
+    id: power_inverter
+    entity_id: sensor.inverter_load  # ← ANPASSEN
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.0fW", x);
+            id(nextion_display).set_component_text("cons_inverter", buffer);
+
+# ============================================
+# NEXTION KOMPONENTEN (Referenz)
+# ============================================
+#
+# Auf Power_1 Page benötigt:
+# - Text "power_cons"      → Gesamtverbrauch
+# - Text "power_gen"       → Gesamt-Erzeugung
+# - Text "power_net"       → Netto (Grün/Rot)
+# - Text "energy_today"    → Energie heute
+#
+# Auf Power_2 Page (Top Consumers):
+# - Text "cons_fridge"     → Kühlschrank
+# - Text "cons_heater"     → Heizung
+# - Text "cons_pump"       → Pumpe
+# - Text "cons_inverter"   → Inverter
+# - Text "cons_other"      → Sonstiges
+
+# ============================================
+# HINWEISE FÜR ANPASSUNG
+# ============================================
+#
+# 1. Ersetze alle entity_id mit deinen Home Assistant Entities
+# 2. Füge weitere Verbraucher hinzu nach gleichem Muster
+# 3. Optional: Diagramm für Verlauf (Nextion Waveform)
+# 4. Optional: Kosten-Berechnung (kWh x Preis)

@@ -1,0 +1,102 @@
+# ============================================
+# SmartEBL Display - Water Section
+# ============================================
+# Template für Wasser-Systeme (Tanks, Pumpen, etc.)
+#
+# Import in deine main.yaml:
+#   packages:
+#     water: github://CzarofAK/smartebl_display/esphome/sections/water.yaml@main
+
+# ============================================
+# TEMPLATE - ANPASSEN ERFORDERLICH!
+# ============================================
+# Dieses File ist ein Template. Ersetze alle entity_id
+# mit deinen eigenen Home Assistant Entities!
+
+# ============================================
+# TANK SENSOREN
+# ============================================
+
+sensor:
+  # Fresh Water Tank Level
+  - platform: homeassistant
+    id: water_fresh_tank
+    entity_id: sensor.fresh_water_tank  # ← ANPASSEN
+    name: "Fresh Water"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            // Update Nextion (Water_1 Page)
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL", x);
+            id(nextion_display).set_component_text("fresh_level", buffer);
+            
+            // Farbe basierend auf Level
+            float tank_max = 100.0;  // ← Tank-Größe anpassen
+            float percent = (x / tank_max) * 100.0;
+            int color = (percent < 20) ? 63488 : (percent < 40) ? 64512 : 2016;
+            id(nextion_display).set_component_value("fresh_level.pco", color);
+  
+  # Water Pressure
+  - platform: homeassistant
+    id: water_pressure
+    entity_id: sensor.water_pressure  # ← ANPASSEN
+    name: "Water Pressure"
+    unit_of_measurement: "bar"
+    on_value:
+      then:
+        - lambda: |-
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%.1fbar", x);
+            id(nextion_display).set_component_text("water_pressure", buffer);
+
+# ============================================
+# PUMPEN
+# ============================================
+
+binary_sensor:
+  # Water Pump Status
+  - platform: homeassistant
+    id: water_pump_running
+    entity_id: binary_sensor.water_pump  # ← ANPASSEN
+    name: "Water Pump"
+    on_press:
+      then:
+        - lambda: |-
+            id(nextion_display).set_component_text("pump_status", "Running");
+            id(nextion_display).set_component_value("pump_status.pco", 2016);  // Grün
+    on_release:
+      then:
+        - lambda: |-
+            id(nextion_display).set_component_text("pump_status", "Off");
+            id(nextion_display).set_component_value("pump_status.pco", 50712);  // Grau
+
+switch:
+  # Water Pump Control (optional)
+  - platform: homeassistant
+    id: water_pump_switch
+    entity_id: switch.water_pump  # ← ANPASSEN
+
+# ============================================
+# NEXTION KOMPONENTEN (Referenz)
+# ============================================
+#
+# Auf Water_1 Page benötigt:
+# - Text "fresh_level"     → Fresh Water Level
+# - Text "water_pressure"  → Wasser-Druck
+# - Text "pump_status"     → Pumpen-Status
+#
+# Optional auf Water_2:
+# - Text "gray_level"      → Grauwasser Level
+# - Text "black_level"     → Schwarzwasser Level
+# - Button "btn_pump"      → Pumpe Ein/Aus
+
+# ============================================
+# HINWEISE FÜR ANPASSUNG
+# ============================================
+#
+# 1. Ersetze alle entity_id mit deinen Home Assistant Entities
+# 2. Passe Tank-Größen an (tank_max Variablen)
+# 3. Füge weitere Sensoren hinzu (z.B. Boiler-Temperatur)
+# 4. Optional: Steuerung hinzufügen (Pumpe Ein/Aus)

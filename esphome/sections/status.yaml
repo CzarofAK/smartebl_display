@@ -1,0 +1,248 @@
+# ============================================
+# SmartEBL Display - Status Section
+# ============================================
+# Status-Übersicht mit allen Sicherungen und Tank-Levels
+#
+# Import in deine main.yaml:
+#   packages:
+#     status: github://CzarofAK/smartebl_display/esphome/sections/status.yaml@main
+
+# ============================================
+# SICHERUNGEN (18 Stück - Beispiel für 6)
+# ============================================
+# Erweitere dies auf alle 18 Sicherungen!
+
+binary_sensor:
+  # Sicherung 1
+  - platform: homeassistant
+    id: status_sich_1
+    entity_id: binary_sensor.fuse_1_main  # ← ANPASSEN
+    name: "Sicherung 1 Main"
+    on_state:
+      then:
+        - lambda: |-
+            int color = x ? 63488 : 2016;  // Rot wenn defekt, Grün wenn OK
+            id(nextion_display).set_component_value("sich_1.pco", color);
+  
+  # Sicherung 2
+  - platform: homeassistant
+    id: status_sich_2
+    entity_id: binary_sensor.fuse_2_lights  # ← ANPASSEN
+    name: "Sicherung 2 Lights"
+    on_state:
+      then:
+        - lambda: |-
+            int color = x ? 63488 : 2016;
+            id(nextion_display).set_component_value("sich_2.pco", color);
+  
+  # Sicherung 3
+  - platform: homeassistant
+    id: status_sich_3
+    entity_id: binary_sensor.fuse_3_water  # ← ANPASSEN
+    name: "Sicherung 3 Water"
+    on_state:
+      then:
+        - lambda: |-
+            int color = x ? 63488 : 2016;
+            id(nextion_display).set_component_value("sich_3.pco", color);
+  
+  # Sicherung 4
+  - platform: homeassistant
+    id: status_sich_4
+    entity_id: binary_sensor.fuse_4_heater  # ← ANPASSEN
+    name: "Sicherung 4 Heater"
+    on_state:
+      then:
+        - lambda: |-
+            int color = x ? 63488 : 2016;
+            id(nextion_display).set_component_value("sich_4.pco", color);
+  
+  # Sicherung 5
+  - platform: homeassistant
+    id: status_sich_5
+    entity_id: binary_sensor.fuse_5_12v_aux  # ← ANPASSEN
+    name: "Sicherung 5 12V Aux"
+    on_state:
+      then:
+        - lambda: |-
+            int color = x ? 63488 : 2016;
+            id(nextion_display).set_component_value("sich_5.pco", color);
+  
+  # Sicherung 6
+  - platform: homeassistant
+    id: status_sich_6
+    entity_id: binary_sensor.fuse_6_refrigerator  # ← ANPASSEN
+    name: "Sicherung 6 Fridge"
+    on_state:
+      then:
+        - lambda: |-
+            int color = x ? 63488 : 2016;
+            id(nextion_display).set_component_value("sich_6.pco", color);
+  
+  # ========================================
+  # FÜGE HIER SICHERUNGEN 7-18 HINZU
+  # ========================================
+  # Kopiere einfach den Block oben und ändere:
+  # - id: status_sich_7
+  # - entity_id: binary_sensor.fuse_7_xxx
+  # - name: "Sicherung 7 XXX"
+  # - set_component_value("sich_7.pco", color)
+
+# ============================================
+# TANK LEVELS
+# ============================================
+
+sensor:
+  # Fresh Water Tank
+  - platform: homeassistant
+    id: tank_fresh_water
+    entity_id: sensor.fresh_water_tank  # ← ANPASSEN
+    name: "Fresh Water"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            // Berechne Prozent (anpassen für deine Tank-Größe)
+            float tank_max = 100.0;  // 100L Tank ← ANPASSEN
+            float percent = (x / tank_max) * 100.0;
+            
+            // Farbe basierend auf Level
+            int color = 2016;  // Grün
+            if (percent < 20) {
+              color = 63488;  // Rot
+            } else if (percent < 40) {
+              color = 64512;  // Orange
+            }
+            
+            // Update Display
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL (%.0f%%)", x, percent);
+            id(nextion_display).set_component_text("tank_fresh", buffer);
+            id(nextion_display).set_component_value("tank_fresh.pco", color);
+  
+  # Gray Water Tank
+  - platform: homeassistant
+    id: tank_gray_water
+    entity_id: sensor.gray_water_tank  # ← ANPASSEN
+    name: "Gray Water"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            float tank_max = 70.0;  // 70L Tank ← ANPASSEN
+            float percent = (x / tank_max) * 100.0;
+            
+            // Bei Grauwasser: Rot wenn VOLL (> 80%)
+            int color = 2016;  // Grün
+            if (percent > 80) {
+              color = 63488;  // Rot (fast voll!)
+            } else if (percent > 60) {
+              color = 64512;  // Orange (voll bald)
+            }
+            
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL (%.0f%%)", x, percent);
+            id(nextion_display).set_component_text("tank_gray", buffer);
+            id(nextion_display).set_component_value("tank_gray.pco", color);
+  
+  # Black Water Tank
+  - platform: homeassistant
+    id: tank_black_water
+    entity_id: sensor.black_water_tank  # ← ANPASSEN
+    name: "Black Water"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            float tank_max = 60.0;  // 60L Tank ← ANPASSEN
+            float percent = (x / tank_max) * 100.0;
+            
+            // Bei Schwarzwasser: Rot wenn VOLL
+            int color = 2016;  // Grün
+            if (percent > 80) {
+              color = 63488;  // Rot
+            } else if (percent > 60) {
+              color = 64512;  // Orange
+            }
+            
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL (%.0f%%)", x, percent);
+            id(nextion_display).set_component_text("tank_black", buffer);
+            id(nextion_display).set_component_value("tank_black.pco", color);
+  
+  # LPG Tank (Gas)
+  - platform: homeassistant
+    id: tank_lpg
+    entity_id: sensor.lpg_tank  # ← ANPASSEN
+    name: "LPG Tank"
+    unit_of_measurement: "kg"
+    on_value:
+      then:
+        - lambda: |-
+            float tank_max = 8.0;  // 8kg Tank ← ANPASSEN
+            float percent = (x / tank_max) * 100.0;
+            
+            int color = 2016;  // Grün
+            if (percent < 10) {
+              color = 63488;  // Rot (fast leer!)
+            } else if (percent < 25) {
+              color = 64512;  // Orange (niedrig)
+            }
+            
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.1fkg (%.0f%%)", x, percent);
+            id(nextion_display).set_component_text("tank_lpg", buffer);
+            id(nextion_display).set_component_value("tank_lpg.pco", color);
+
+# ============================================
+# NEXTION KOMPONENTEN (Referenz)
+# ============================================
+#
+# Auf Status_1 Page benötigt:
+#
+# SICHERUNGEN (Grid Layout):
+# - Text "sich_1" bis "sich_18"
+#   Position: 3 Spalten x 6 Zeilen
+#   Text: "Sich.1 Main", "Sich.2 Lights", etc.
+#   Farbe: Dynamisch (Grün OK / Rot Defekt)
+#
+# TANKS:
+# - Text "tank_fresh"  → Fresh Water Level
+# - Text "tank_gray"   → Gray Water Level
+# - Text "tank_black"  → Black Water Level
+# - Text "tank_lpg"    → LPG Level
+#
+# ELECTRICAL STATUS (optional auf Status_2):
+# - Text "bat_status"  → Battery Voltage & SOC
+# - Text "solar_status" → Solar Power
+# - Text "shore_status" → Shore Connected/Disconnected
+
+# ============================================
+# SCRIPT: Update alle Status-Komponenten
+# ============================================
+
+script:
+  - id: update_status_page
+    mode: restart
+    then:
+      - lambda: |-
+          // Wird automatisch aufgerufen bei Sensor-Updates
+          // Zusätzliche Logik hier wenn nötig
+          ESP_LOGI("status", "Status page updated");
+
+# ============================================
+# HINWEISE FÜR ANPASSUNG
+# ============================================
+#
+# 1. Erweitere Sicherungen auf 18 (oder deine Anzahl)
+#
+# 2. Passe Tank-Größen an (tank_max Variablen)
+#
+# 3. Passe Schwellwerte an:
+#    Fresh Water: < 20% = Rot
+#    Gray/Black:  > 80% = Rot (voll!)
+#    LPG:         < 10% = Rot
+#
+# 4. Füge weitere Sensoren hinzu (z.B. Diesel-Tank)
+#
+# 5. Optional: Batterie-Status auf Status_2 Page
