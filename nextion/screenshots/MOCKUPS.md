@@ -279,7 +279,7 @@ Alert Text:   800x50 px (oben, klickbar für Status)
 1. **Transparentes Design**: Alle Komponenten haben `bco=65535` (transparent)
 2. **Scrolling Text**: Lauftext scrollt nur wenn Text > Display-Breite
 3. **Farbwechsel**: Dynamisch via ESPHome (pco ändern)
-4. **Symbole**: Unicode funktioniert in Nextion (✓ ⚠️ ⚡ 🟢 🔴)
+4. **Symbole**: Unicode funktioniert in Nextion (✓ &#128689 ⚠️ ⚡ 🟢 🔴)
 5. **Seiten-Zähler**: Immer rechts oben (1/2, 2/2)
 6. **Navigation**: Links = Sektionen, Rechts/Center = Seiten-Navigation
 
