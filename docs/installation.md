@@ -36,14 +36,12 @@ GND         -> GND (Black)
 
 ## Part 3: ESPHome
 
-### Create main config
+### Create secrects and main config
 
-```
 see:
 https://github.com/CzarofAK/smartebl/blob/main/secrets.yaml.example
 and
 https://github.com/CzarofAK/smartebl/blob/main/basic.yaml.example
-```
 
 ### Create secrets.yaml
 
