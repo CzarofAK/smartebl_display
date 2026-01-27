@@ -26,14 +26,18 @@ Complete design guide for SmartEBL Display - philosophy, principles, mockups, an
 **Core Principles:**
 
 ✅ **Clarity** - Information readable at a glance
+
 ✅ **Prioritization** - Critical information first (Master Warning/Caution)
+
 ✅ **Consistency** - Same elements always in same positions
+
 ✅ **Minimalism** - Only relevant information, no clutter
+
 ✅ **Fault Tolerance** - Unambiguous operation, no confusion
 
 ### Design Goals
 
-1. **Readable while driving** - Large fonts, high contrast
+1. **Easy Readable** - Large fonts, high contrast
 2. **Quick status check** - Master Warning text at top
 3. **Easy navigation** - Touch targets sized for fingers
 4. **Professional appearance** - Clean, transparent design
