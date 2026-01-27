@@ -36,48 +36,12 @@ GND         -> GND (Black)
 
 ## Part 3: ESPHome
 
-### Create main config
+### Create secrects and main config
 
-```yaml
-# motorhome-display.yaml
-substitutions:
-  device_name: motorhome-display
-
-esphome:
-  name: ${device_name}
-
-esp32:
-  board: esp32dev
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-
-api:
-  encryption:
-    key: !secret api_encryption_key
-
-ota:
-  - platform: esphome
-    password: !secret ota_password
-
-logger:
-  baud_rate: 0  # IMPORTANT!
-
-packages:
-  display_base: !include display-base.yaml
-  alarms: !include display-alarms.yaml
-  electric: !include sections/electric.yaml
-```
-
-### Create secrets.yaml
-
-```yaml
-wifi_ssid: "Your_WiFi"
-wifi_password: "Password"
-api_encryption_key: "32-char-key"
-ota_password: "Password"
-```
+see:
+https://github.com/CzarofAK/smartebl/blob/main/secrets.yaml.example
+and
+https://github.com/CzarofAK/smartebl/blob/main/basic.yaml.example
 
 ### Customize entity IDs
 
@@ -85,13 +49,7 @@ Replace all `entity_id` in section files with your entities.
 
 ## Part 4: Flash & Test
 
-```bash
-# First flash (USB)
-esphome run motorhome-display.yaml
-
-# Check logs
-esphome logs motorhome-display.yaml
-```
+see: https://github.com/CzarofAK/smartebl_display/blob/main/README.md
 
 ## Part 5: Troubleshooting
 

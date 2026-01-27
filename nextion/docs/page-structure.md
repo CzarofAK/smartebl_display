@@ -15,7 +15,7 @@
 
 | Page ID | Name | Description |
 |---------|------|-------------|
-| 0 | Home | Main menu with 5 section buttons |
+| 0 | Home Page | Home Page |
 | 1-2 | Electric_1, Electric_2 | Electrical systems |
 | 3-4 | Water_1, Water_2 | Water systems |
 | 5-6 | Climate_1, Climate_2 | Climate & heating |
@@ -29,7 +29,7 @@
 **Program.s → Add Variables:**
 
 ```c
-// Stores current section (0=Home, 1=Electric, 2=Water, 3=Climate, 4=Status, 5=Power)
+// Stores current section (0=Home Page, 1=Electric, 2=Water, 3=Climate, 4=Status, 5=Power)
 int currentSection=0
 
 // Stores page index within section (0=first, 1=second)
@@ -103,10 +103,17 @@ page Electric_1
 ---
 
 **Button: Water**
+- **Type**: Button
 - **Name**: `btn_water`
 - **Position**: x=0, y=150
 - **Size**: w=150, h=80
 - **Text**: "Water"
+- **Font**: Font 2 (20pt)
+- **Properties**:
+  - `bco`: 65535 (transparent)
+  - `pco`: 65535 (white)
+  - `pco2`: 65535 (transparent)
+  - `txt`: "Electric"
 
 **Touch Release Event:**
 ```c
@@ -118,10 +125,17 @@ page Water_1
 ---
 
 **Button: Climate**
+- **Type**: Button
 - **Name**: `btn_climate`
 - **Position**: x=0, y=240
 - **Size**: w=150, h=80
 - **Text**: "Climate"
+- **Font**: Font 2 (20pt)
+- **Properties**:
+  - `bco`: 65535 (transparent)
+  - `pco`: 65535 (white)
+  - `pco2`: 65535 (transparent)
+  - `txt`: "Electric"
 
 **Touch Release Event:**
 ```c
@@ -133,10 +147,17 @@ page Climate_1
 ---
 
 **Button: Status**
+- **Type**: Button
 - **Name**: `btn_status`
 - **Position**: x=0, y=330
 - **Size**: w=150, h=80
 - **Text**: "Status"
+- **Font**: Font 2 (20pt)
+- **Properties**:
+  - `bco`: 65535 (transparent)
+  - `pco`: 65535 (white)
+  - `pco2`: 65535 (transparent)
+  - `txt`: "Electric"
 
 **Touch Release Event:**
 ```c
@@ -148,11 +169,18 @@ page Status_1
 ---
 
 **Button: Power**
+- **Type**: Button
 - **Name**: `btn_power`
 - **Position**: x=0, y=420
 - **Size**: w=150, h=80
 - **Text**: "Power"
-
+- **Font**: Font 2 (20pt)
+- **Properties**:
+  - `bco`: 65535 (transparent)
+  - `pco`: 65535 (white)
+  - `pco2`: 65535 (transparent)
+  - `txt`: "Electric"
+ 
 **Touch Release Event:**
 ```c
 currentSection=5

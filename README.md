@@ -45,13 +45,10 @@ packages:
   status: github://CzarofAK/smartebl_display/esphome/sections/status.yaml@main
 ```
 
-### 3. Flash ESP32
+### 3. Flash
 
-Use [ESPHome Web](https://web.esphome.io/) or command line:
-
-```bash
-esphome run motorhome-display.yaml
-```
+- build .bin on your ESPhome builder in HA or CLI
+- flash the .bin with ESPhome builder in HA or online ESPhome tool
 
 **For detailed installation instructions, see [Installation Guide](docs/installation.md)**
 
