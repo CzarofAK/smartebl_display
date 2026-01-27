@@ -21,7 +21,7 @@ Master Warning/Caution system inspired by aviation cockpits - modular, transpare
 
 ## Demo
 
-find here the Demo: https://indigo-santa-47786041.figma.site/
+find here the Demo: 
 
 ---
 
