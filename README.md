@@ -28,10 +28,9 @@ packages:
 ```
 
 ### 3. Flash
-```bash
+
 - build .bin on your ESPhome builder in HA or CLI
 - flash the .bin with ESPhome builder in HA or online ESPhome tool
-```
 
 ## Documentation
 
