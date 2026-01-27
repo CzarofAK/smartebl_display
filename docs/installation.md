@@ -49,13 +49,7 @@ Replace all `entity_id` in section files with your entities.
 
 ## Part 4: Flash & Test
 
-```bash
-# First flash (USB)
-esphome run motorhome-display.yaml
-
-# Check logs
-esphome logs motorhome-display.yaml
-```
+see: https://github.com/CzarofAK/smartebl_display/blob/main/README.md
 
 ## Part 5: Troubleshooting
 
