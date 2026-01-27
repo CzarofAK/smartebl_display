@@ -43,15 +43,6 @@ https://github.com/CzarofAK/smartebl/blob/main/secrets.yaml.example
 and
 https://github.com/CzarofAK/smartebl/blob/main/basic.yaml.example
 
-### Create secrets.yaml
-
-```yaml
-wifi_ssid: "Your_WiFi"
-wifi_password: "Password"
-api_encryption_key: "32-char-key"
-ota_password: "Password"
-```
-
 ### Customize entity IDs
 
 Replace all `entity_id` in section files with your entities.
