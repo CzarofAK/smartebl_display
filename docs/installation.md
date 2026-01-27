@@ -38,36 +38,11 @@ GND         -> GND (Black)
 
 ### Create main config
 
-```yaml
-# motorhome-display.yaml
-substitutions:
-  device_name: motorhome-display
-
-esphome:
-  name: ${device_name}
-
-esp32:
-  board: esp32dev
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-
-api:
-  encryption:
-    key: !secret api_encryption_key
-
-ota:
-  - platform: esphome
-    password: !secret ota_password
-
-logger:
-  baud_rate: 0  # IMPORTANT!
-
-packages:
-  display_base: !include display-base.yaml
-  alarms: !include display-alarms.yaml
-  electric: !include sections/electric.yaml
+```
+see:
+https://github.com/CzarofAK/smartebl/blob/main/secrets.yaml.example
+and
+https://github.com/CzarofAK/smartebl/blob/main/basic.yaml.example
 ```
 
 ### Create secrets.yaml
