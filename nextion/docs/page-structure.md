@@ -28,7 +28,7 @@
 **Program.s → Add Variables:**
 
 ```c
-// Stores current section (0=Home, 1=Electric, 2=Water, 3=Climate, 4=Status, 5=Power)
+// Stores current section (0=Electric, 1=Water, 2=Climate, 3=Status, 4=Power)
 int currentSection=0
 
 // Stores page index within section (0=first, 1=second)
