@@ -15,12 +15,11 @@
 
 | Page ID | Name | Description |
 |---------|------|-------------|
-| 0 | Home | Main menu with 5 section buttons |
-| 1-2 | Electric_1, Electric_2 | Electrical systems |
-| 3-4 | Water_1, Water_2 | Water systems |
-| 5-6 | Climate_1, Climate_2 | Climate & heating |
-| 7-8 | Status_1, Status_2 | System status & alarms |
-| 9-10 | Power_1, Power_2 | Energy & batteries |
+| 0-1 | Electric_1, Electric_2 | Electrical systems |
+| 2-3 | Water_1, Water_2 | Water systems |
+| 4-5 | Climate_1, Climate_2 | Climate & heating |
+| 6-7 | Status_1, Status_2 | System status & alarms |
+| 8-9 | Power_1, Power_2 | Energy & batteries |
 
 ---
 
