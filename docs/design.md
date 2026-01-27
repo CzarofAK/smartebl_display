@@ -26,13 +26,9 @@ Complete design guide for SmartEBL Display - philosophy, principles, mockups, an
 **Core Principles:**
 
 ✅ **Clarity** - Information readable at a glance
-
 ✅ **Prioritization** - Critical information first (Master Warning/Caution)
-
 ✅ **Consistency** - Same elements always in same positions
-
 ✅ **Minimalism** - Only relevant information, no clutter
-
 ✅ **Fault Tolerance** - Unambiguous operation, no confusion
 
 ### Design Goals
