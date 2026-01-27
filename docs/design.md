@@ -72,7 +72,7 @@ Visual representation of all display pages (7" - 800x480px).
 ```
 
 **Key Features:**
-- Master Warning text at top (green = normal)
+- Master Warning text at top (when no warnings acitve, invisible)
 - 5 menu buttons on left (150px wide)
 - Large content area for welcome message
 - Clean, minimal design
@@ -101,7 +101,7 @@ Visual representation of all display pages (7" - 800x480px).
 │               │   SHORE POWER                                       │
 │               │   Status:      Disconnected                         │
 │               │                                                     │
-│               │                                   [ Next Page → ]   │
+│               │                                                     │
 └───────────────┴─────────────────────────────────────────────────────┘
 ```
 
@@ -109,7 +109,7 @@ Visual representation of all display pages (7" - 800x480px).
 - Active button highlighted (━━Electric━━ in green with underline)
 - Page counter (1/2) top right
 - Battery status with color-coded SOC
-- Next page button bottom right
+- Change to next page with repeated press on "Electric"
 
 ---
 
@@ -135,7 +135,7 @@ Visual representation of all display pages (7" - 800x480px).
 │               │   Solar:      245W        🟢                        │
 │               │   Shore:      Disconnected                          │
 │               │                                                     │
-│               │                                   [ Next Page → ]   │
+│               │                                                     │
 └───────────────┴─────────────────────────────────────────────────────┘
 ```
 
@@ -149,10 +149,10 @@ Visual representation of all display pages (7" - 800x480px).
 
 ### Master Warning States
 
-#### Normal State (Green)
+#### Normal State (invisible)
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  ✓ ALL SYSTEMS NORMAL                                              │
+│                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -262,13 +262,11 @@ pco2=65535   // Press Color 2 = Transparent
 - Underline: Visual indicator for active
 
 **Alarms:**
-- Green (2016): All systems OK
 - Orange (64512): Warning (Caution) - attention needed
 - Red (63488): Critical (Warning) - action required
 
 **Scrolling Text Examples:**
 ```
-Green:  "✓ ALL SYSTEMS NORMAL"
 Orange: "⚡ MASTER CAUTION"
 Red:    "⚠️ MASTER WARNING"
 ```
@@ -496,31 +494,6 @@ txt_fuse.txt="🔴 Fuse.1 Main"
 ```
 
 **Tip**: Test symbols in Nextion Editor to ensure font supports them\!
-
----
-
-## Responsive Design
-
-### Different Display Sizes
-
-This design is optimized for **7" (800x480)**.
-
-**Adaptation for Other Sizes:**
-
-| Display | Resolution | Adjustments |
-|---------|------------|-------------|
-| 3.5" | 480x320 | Menu: 100px, Fonts: -2pt, Buttons: 100x60 |
-| 5" | 800x480 | 1:1 usable (no changes) |
-| 7" | 800x480 | Perfect (Original design) |
-| 10.1" | 1024x600 | Content: +200px, Fonts: +4pt |
-
-### Scaling Factors
-
-```
-Menu Width:     800x480 → 150px  |  1024x600 → 200px
-Base Font:      800x480 → 16pt   |  1024x600 → 20pt
-Button Height:  800x480 → 80px   |  1024x600 → 100px
-```
 
 ---
 
