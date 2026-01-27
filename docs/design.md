@@ -23,10 +23,6 @@ Complete design guide for SmartEBL Display - philosophy, principles, mockups, an
 
 ## Design Philosophy
 
-### Inspiration: Aviation Cockpits
-
-The SmartEBL Display design is inspired by **Boeing/Airbus cockpit systems**, specifically the Master Warning/Caution display concept.
-
 **Core Principles:**
 
 ✅ **Clarity** - Information readable at a glance
