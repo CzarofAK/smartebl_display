@@ -2,110 +2,164 @@
 
 **Complete Overview of All Files and Directories**
 
+---
+
+## NEW: Consolidated Documentation Structure
+
+All documentation has been reorganized into **5 main comprehensive guides**:
+
 ```
 smartebl_display/
 │
-├── README.md                       # Main README with overview
-├── LICENSE                         # MIT License
-├── CONTRIBUTING.md                 # Contribution Guidelines
-├── .gitignore                      # Git Ignore Rules
+├── README.md                          # Main overview + quick start
 │
-├── docs/                           # General Documentation
-│   ├── installation.md             # Step-by-Step Installation
-│   └── customization.md            # Customization Guide
+├── docs/                              # User Guides
+│   ├── installation.md                # Complete installation + troubleshooting
+│   └── design.md                      # Design philosophy + mockups + layout
 │
-├── nextion/                        # Nextion Display Files
-│   ├── README.md                   # Nextion Overview
-│   ├── docs/                       # Nextion Documentation
-│   │   ├── page-structure.md       # Complete Page Structure (IMPORTANT!)
-│   │   ├── design-guide.md         # Design Principles
-│   │   └── component-reference.md  # Component Reference
-│   ├── screenshots/                # Display Mockups
-│   │   └── MOCKUPS.md              # ASCII-Art Visualizations
-│   └── examples/                   # Example Projects
-│       └── README.md               # Placeholder
+├── esphome/                           # ESPHome Configuration
+│   └── esphome.md                     # Package system + customization guide
 │
-└── esphome/                        # ESPHome Configurations
-    ├── README.md                   # ESPHome Overview
-    ├── display-base.yaml           # Base: ESP32 + UART (CORE)
-    ├── display-alarms.yaml         # Master Warning/Caution System (CORE)
-    ├── sections/                   # Modular Sections
-    │   ├── electric.yaml           # Electric Section (Implemented)
-    │   ├── water.yaml              # Water Section (Template)
-    │   ├── climate.yaml            # Climate Section (Template)
-    │   ├── status.yaml             # Status Section (Implemented)
-    │   └── power.yaml              # Power Section (Template)
-    └── examples/
-        └── full-config.yaml        # Complete Example
+└── nextion/                           # Nextion Display
+    └── nextion.md                     # HMI creation + page structure + components
+```
+
+**Benefits:**
+- ✅ Easier to find information (5 files instead of 10+)
+- ✅ Better flow and structure
+- ✅ Less duplication
+- ✅ Single source of truth for each topic
+
+---
+
+## Complete Directory Structure
+
+```
+smartebl_display/
+│
+├── README.md                          # 📖 Main documentation + quick start
+├── LICENSE                            # MIT License
+├── CONTRIBUTING.md                    # Contribution guidelines
+├── REPO_STRUCTURE.md                  # This file
+├── .gitignore                         # Git ignore rules
+│
+├── docs/                              # 📚 User Documentation
+│   ├── installation.md                # ✅ Complete installation + troubleshooting
+│   ├── design.md                      # ✅ Design philosophy + mockups + layout
+│   ├── customization.md               # 🗑️ DEPRECATED (merged into esphome.md)
+│   └── troubleshooting.md             # 🗑️ DEPRECATED (merged into installation.md)
+│
+├── nextion/                           # 🖥️ Nextion Display Files
+│   ├── nextion.md                     # ✅ NEW: Complete Nextion guide
+│   ├── docs/                          # 🗑️ Legacy documentation (deprecated)
+│   │   ├── page-structure.md          # 🗑️ DEPRECATED (merged into nextion.md)
+│   │   ├── design-guide.md            # 🗑️ DEPRECATED (merged into design.md)
+│   │   └── component-reference.md     # 🗑️ DEPRECATED (merged into nextion.md)
+│   ├── screenshots/
+│   │   └── MOCKUPS.md                 # 🗑️ DEPRECATED (merged into design.md)
+│   ├── examples/
+│   │   └── README.md                  # Placeholder for community examples
+│   └── README.md                      # Quick Nextion overview
+│
+└── esphome/                           # ⚡ ESPHome Configurations
+    ├── esphome.md                     # ✅ NEW: Complete ESPHome guide
+    ├── display-base.yaml              # ✅ CORE: ESP32 + Nextion UART
+    ├── display-alarms.yaml            # ✅ CORE: Master Warning/Caution system
+    ├── sections/                      # Modular display sections
+    │   ├── electric.yaml              # ✅ Electric section (battery, solar, shore)
+    │   ├── water.yaml                 # ✅ Water section (tanks, pumps)
+    │   ├── climate.yaml               # ✅ Climate section (temp, heating)
+    │   ├── status.yaml                # ✅ Status section (fuses, overview)
+    │   └── power.yaml                 # ✅ Power section (energy management)
+    ├── examples/
+    │   └── full-config.yaml           # ✅ Complete example configuration
+    └── README.md                      # Quick ESPHome overview
 ```
 
 ---
 
-## File Status
+## File Status & Purpose
 
-### ✅ Complete & Ready to Use
+### ✅ Production Ready - Core Documentation
 
-- `README.md` - Main Documentation
-- `LICENSE` - MIT License
-- `CONTRIBUTING.md` - Contribution Guide
-- `.gitignore` - Git Ignore
-- `docs/installation.md` - Installation Guide
-- `docs/customization.md` - Customization Guide
-- `nextion/docs/page-structure.md` - **CRITICAL: Complete Nextion Guide**
-- `nextion/docs/design-guide.md` - Design Best Practices
-- `nextion/docs/component-reference.md` - Component Reference
-- `nextion/screenshots/MOCKUPS.md` - Display Mockups
-- `esphome/display-base.yaml` - **CORE: ESP32 Base**
-- `esphome/display-alarms.yaml` - **CORE: Alarm System**
-- `esphome/sections/electric.yaml` - Electric Section (complete)
-- `esphome/sections/status.yaml` - Status Section (complete)
-- `esphome/examples/full-config.yaml` - Example Config
+| File | Status | Purpose |
+|------|--------|---------|
+| `README.md` | ✅ Complete | Main overview, features, quick start, SmartEBL integration |
+| `docs/installation.md` | ✅ Complete | Complete installation + troubleshooting (consolidated) |
+| `docs/design.md` | ✅ Complete | Design philosophy + mockups + layout (consolidated) |
+| `esphome/esphome.md` | ✅ Complete | Package system + customization + integration guide |
+| `nextion/nextion.md` | ✅ Complete | HMI creation + page structure + components (consolidated) |
 
-### 📝 Templates (Customization Required)
+### ✅ Production Ready - Configuration Files
 
-- `esphome/sections/water.yaml` - Template for Water
-- `esphome/sections/climate.yaml` - Template for Climate
-- `esphome/sections/power.yaml` - Template for Power
+| File | Status | Purpose |
+|------|--------|---------|
+| `esphome/display-base.yaml` | ✅ Complete | ESP32 + UART base configuration |
+| `esphome/display-alarms.yaml` | ✅ Complete | Master Warning/Caution system |
+| `esphome/sections/electric.yaml` | ✅ Complete | Electric section (battery, solar, shore power) |
+| `esphome/sections/status.yaml` | ✅ Complete | Status section (fuses, tanks) |
+| `esphome/sections/water.yaml` | ✅ Complete | Water section template |
+| `esphome/sections/climate.yaml` | ✅ Complete | Climate section template |
+| `esphome/sections/power.yaml` | ✅ Complete | Power section template |
+| `esphome/examples/full-config.yaml` | ✅ Complete | Complete example configuration |
+
+### 🗑️ Deprecated Files (To Be Removed)
+
+These files have been **consolidated** into the main documentation:
+
+| Old File | Merged Into | Status |
+|----------|-------------|--------|
+| `docs/customization.md` | `esphome/esphome.md` | 🗑️ Can be removed |
+| `docs/troubleshooting.md` | `docs/installation.md` | 🗑️ Can be removed |
+| `nextion/docs/page-structure.md` | `nextion/nextion.md` | 🗑️ Can be removed |
+| `nextion/docs/component-reference.md` | `nextion/nextion.md` | 🗑️ Can be removed |
+| `nextion/docs/design-guide.md` | `docs/design.md` | 🗑️ Can be removed |
+| `nextion/screenshots/MOCKUPS.md` | `docs/design.md` | 🗑️ Can be removed |
 
 ---
 
-## Quick Start Sequence
+## Quick Navigation Guide
 
-**For New Users:**
+### For New Users (Start Here)
 
-1. **Read README.md** → Overview
-2. **docs/installation.md** → Step-by-Step Installation
-3. **nextion/docs/page-structure.md** → Create Nextion Display
-4. **esphome/display-base.yaml** → Configure ESP32
-5. **esphome/sections/electric.yaml** → Customize First Section
-6. **docs/customization.md** → Your Own Customizations
+1. **README.md** - Overview, features, quick start
+2. **docs/installation.md** - Complete installation guide
+3. **nextion/nextion.md** - Create Nextion HMI
+4. **esphome/esphome.md** - Configure ESPHome packages
+
+### For Customization
+
+**Nextion Display:**
+- **nextion/nextion.md** - Page structure, components, navigation
+- **docs/design.md** - Design principles, mockups, colors, layout
+
+**ESPHome Configuration:**
+- **esphome/esphome.md** - Package system, add sensors, customize sections
+- **esphome/sections/*.yaml** - Modify individual section configurations
+
+### For Troubleshooting
+
+- **docs/installation.md** → Section: "Troubleshooting"
+- Check ESPHome logs: `esphome logs motorhome-display.yaml`
+- **GitHub Issues**: [Report problems](https://github.com/CzarofAK/smartebl_display/issues)
 
 ---
 
-## Core Files (Do Not Modify Without Good Reason)
+## Core Files (Critical - Do Not Modify)
 
-- `esphome/display-base.yaml` - UART & Display Base
-- `esphome/display-alarms.yaml` - Alarm Logic
-- `nextion/docs/page-structure.md` - Nextion Reference
+- `esphome/display-base.yaml` - UART & Display base
+- `esphome/display-alarms.yaml` - Alarm logic
+- Core documentation files (README, installation, etc.)
 
-**Changes Only Via Pull Request!**
+**Changes only via Pull Request!**
 
 ---
 
 ## User-Customizable Files
 
-- `esphome/sections/*.yaml` - Customize sections
-- `esphome/examples/full-config.yaml` - Use as template
-- Own Secrets: `secrets.yaml` (not in repo!)
-
----
-
-## Missing Files (Optional, Add Later)
-
-- [ ] `docs/troubleshooting.md` - Troubleshooting Guide
-- [ ] `nextion/*.HMI` - Nextion Project Files (cannot be version controlled!)
-- [ ] Community examples in `nextion/examples/`
-- [ ] Screenshots in `nextion/screenshots/` (actual images)
+- `esphome/sections/*.yaml` - Customize individual sections
+- Your own `motorhome-display.yaml` - Main configuration
+- Your own `secrets.yaml` - WiFi & API credentials (not in repo!)
 
 ---
 
