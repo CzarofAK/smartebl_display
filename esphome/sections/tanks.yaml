@@ -1,0 +1,207 @@
+# ============================================
+# SmartEBL Display - Tanks Section
+# ============================================
+# Template for all tank/fluid monitoring systems
+# Includes: Fresh/Waste Water, Diesel, AdBlue, Gas Bottles
+#
+# Import in your main.yaml:
+#   packages:
+#     tanks: github://CzarofAK/smartebl_display/esphome/sections/tanks.yaml@main
+
+# ============================================
+# TEMPLATE - CUSTOMIZATION REQUIRED!
+# ============================================
+# This file is a template. Replace all entity_id
+# with your own Home Assistant Entities!
+
+# ============================================
+# TANK SENSORS
+# ============================================
+
+sensor:
+  # Fresh Water Tank Level
+  - platform: homeassistant
+    id: tank_fresh_water
+    entity_id: sensor.fresh_water_tank  # ← CUSTOMIZE
+    name: "Fresh Water"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            // Update Nextion (Tanks_1 Page)
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL", x);
+            id(nextion_display).set_component_text("tank_fresh", buffer);
+
+            // Color based on level (Low = Red, Medium = Orange, OK = Green)
+            float tank_max = 100.0;  // ← Adjust tank size
+            float percent = (x / tank_max) * 100.0;
+            int color = (percent < 20) ? 63488 : (percent < 40) ? 64512 : 2016;
+            id(nextion_display).set_component_value("tank_fresh.pco", color);
+
+            // Also update large display on Tanks_2 (external fill page)
+            snprintf(buffer, sizeof(buffer), "%.0f%%", percent);
+            id(nextion_display).set_component_text("tank_fresh_large", buffer);
+            id(nextion_display).set_component_text("txt_fresh_percent", buffer);
+
+  # Waste Water Tank Level
+  - platform: homeassistant
+    id: tank_waste_water
+    entity_id: sensor.waste_water_tank  # ← CUSTOMIZE
+    name: "Waste Water"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            // Update Nextion (Tanks_1 Page)
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL", x);
+            id(nextion_display).set_component_text("tank_waste", buffer);
+
+            // For waste water: Red when FULL (> 80%), Orange when > 60%
+            float tank_max = 80.0;  // ← Adjust tank size
+            float percent = (x / tank_max) * 100.0;
+            int color = (percent > 80) ? 63488 : (percent > 60) ? 64512 : 2016;
+            id(nextion_display).set_component_value("tank_waste.pco", color);
+
+  # Diesel Tank Level
+  - platform: homeassistant
+    id: tank_diesel
+    entity_id: sensor.diesel_tank  # ← CUSTOMIZE
+    name: "Diesel"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            // Update Nextion (Tanks_1 Page)
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL", x);
+            id(nextion_display).set_component_text("tank_diesel", buffer);
+
+            // Color based on level (Low = Red, Medium = Orange, OK = Green)
+            float tank_max = 80.0;  // ← Adjust tank size
+            float percent = (x / tank_max) * 100.0;
+            int color = (percent < 15) ? 63488 : (percent < 30) ? 64512 : 2016;
+            id(nextion_display).set_component_value("tank_diesel.pco", color);
+
+  # AdBlue Tank Level
+  - platform: homeassistant
+    id: tank_adblue
+    entity_id: sensor.adblue_tank  # ← CUSTOMIZE
+    name: "AdBlue"
+    unit_of_measurement: "L"
+    on_value:
+      then:
+        - lambda: |-
+            // Update Nextion (Tanks_1 Page)
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0fL", x);
+            id(nextion_display).set_component_text("tank_adblue", buffer);
+
+            // Color based on level (Low = Red, Medium = Orange, OK = Green)
+            float tank_max = 20.0;  // ← Adjust tank size
+            float percent = (x / tank_max) * 100.0;
+            int color = (percent < 15) ? 63488 : (percent < 30) ? 64512 : 2016;
+            id(nextion_display).set_component_value("tank_adblue.pco", color);
+
+  # Gas Bottle 1 Level
+  - platform: homeassistant
+    id: tank_gas1
+    entity_id: sensor.gas_bottle_1  # ← CUSTOMIZE
+    name: "Gas Bottle 1"
+    unit_of_measurement: "%"
+    on_value:
+      then:
+        - lambda: |-
+            // Update Nextion (Tanks_1 Page)
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0f%%", x);
+            id(nextion_display).set_component_text("tank_gas1", buffer);
+
+            // Color based on level (Low = Red, Medium = Orange, OK = Green)
+            int color = (x < 20) ? 63488 : (x < 40) ? 64512 : 2016;
+            id(nextion_display).set_component_value("tank_gas1.pco", color);
+
+  # Gas Bottle 2 Level
+  - platform: homeassistant
+    id: tank_gas2
+    entity_id: sensor.gas_bottle_2  # ← CUSTOMIZE
+    name: "Gas Bottle 2"
+    unit_of_measurement: "%"
+    on_value:
+      then:
+        - lambda: |-
+            // Update Nextion (Tanks_1 Page)
+            char buffer[20];
+            snprintf(buffer, sizeof(buffer), "%.0f%%", x);
+            id(nextion_display).set_component_text("tank_gas2", buffer);
+
+            // Color based on level (Low = Red, Medium = Orange, OK = Green)
+            int color = (x < 20) ? 63488 : (x < 40) ? 64512 : 2016;
+            id(nextion_display).set_component_value("tank_gas2.pco", color);
+
+# ============================================
+# PUMPS & CONTROLS
+# ============================================
+
+binary_sensor:
+  # Water Pump Status
+  - platform: homeassistant
+    id: water_pump_running
+    entity_id: binary_sensor.water_pump  # ← CUSTOMIZE
+    name: "Water Pump"
+    on_press:
+      then:
+        - lambda: |-
+            id(nextion_display).set_component_text("btn_pump", "ON");
+            id(nextion_display).set_component_value("btn_pump.bco", 2016);  // Green
+    on_release:
+      then:
+        - lambda: |-
+            id(nextion_display).set_component_text("btn_pump", "OFF");
+            id(nextion_display).set_component_value("btn_pump.bco", 63488);  // Red
+
+switch:
+  # Water Pump Control
+  - platform: homeassistant
+    id: water_pump_switch
+    entity_id: switch.water_pump  # ← CUSTOMIZE
+
+# ============================================
+# NEXTION COMPONENTS (Reference)
+# ============================================
+#
+# Required on Tanks_1 Page:
+# - Text "tank_fresh"   → Fresh Water Level (with color)
+# - Text "tank_waste"   → Waste Water Level (with color)
+# - Text "tank_diesel"  → Diesel Level (with color)
+# - Text "tank_adblue"  → AdBlue Level (with color)
+# - Text "tank_gas1"    → Gas Bottle 1 Level (with color)
+# - Text "tank_gas2"    → Gas Bottle 2 Level (with color)
+# - Button "btn_pump"   → Water Pump ON/OFF (with color)
+#
+# Required on Tanks_2 Page (External Fill Display):
+# - Text "tank_fresh_large"   → Large Fresh Water display
+# - Text "txt_fresh_percent"  → Fresh Water percentage
+
+# ============================================
+# CUSTOMIZATION NOTES
+# ============================================
+#
+# 1. Replace all entity_id with your Home Assistant Entities
+# 2. Adjust tank sizes (tank_max variables) to match your actual tanks
+# 3. Add more tank sensors if needed (e.g., gray water, black water)
+# 4. Adjust color thresholds based on your preferences
+# 5. Optional: Add additional pumps or valves
+#
+# Color Coding:
+# - Green (2016):  Normal / OK levels
+# - Orange (64512): Warning / Low (for consumption) or High (for waste)
+# - Red (63488):   Critical / Very Low or Full
+#
+# Tank Threshold Recommendations:
+# - Fresh Water: Red < 20%, Orange < 40%
+# - Waste Water: Red > 80%, Orange > 60%
+# - Diesel:      Red < 15%, Orange < 30%
+# - AdBlue:      Red < 15%, Orange < 30%
+# - Gas:         Red < 20%, Orange < 40%

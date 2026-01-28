@@ -9,7 +9,7 @@ Master Warning/Caution system inspired by aviation cockpits - modular, transpare
 ## Features
 
 - 🚨 **Master Warning/Caution System** - Intelligent alarm prioritization (Red/Orange/Green)
-- 📱 **5 Main Sections** - Electric, Water, Climate, Status, Power
+- 📱 **5 Main Sections** - Electric, Tanks, Climate, Status, Power
 - 🔍 **Transparent Design** - Minimalist, text-only interface for maximum clarity
 - 📊 **Complete Status Overview** - Up to 18 fuses + tank levels + electrical systems
 - 🎯 **Intuitive Touch Navigation** - Easy operation while driving
@@ -92,7 +92,7 @@ packages:
                    ↓
 ┌─────────────────────────────────────────────────┐
 │        7" Nextion Display (800x480)             │
-│   Master Warning | Electric | Water | Climate   │
+│   Master Warning | Electric | Tanks | Climate   │
 │         Status   |   Power  |  Navigation       │
 └─────────────────────────────────────────────────┘
 ```
@@ -141,7 +141,7 @@ See [ESPHome documentation](esphome/esphome.md) for complete package system guid
 | Section | Pages | Content |
 |---------|-------|---------|
 | **Electric** | 2 | Battery voltage/current/SOC, Solar power, Shore power, Alternator |
-| **Water** | 2 | Fresh/gray/black water tanks, Pump status |
+| **Tanks** | 2 | All fluid levels (fresh/waste water, diesel, AdBlue, gas bottles), Pump control |
 | **Climate** | 2 | Interior/exterior temperature, Humidity, Heater status |
 | **Status** | 2 | 18 Fuses overview, Tank levels, System status |
 | **Power** | 2 | Energy consumption, Power sources, Inverter |
@@ -159,7 +159,7 @@ See [ESPHome documentation](esphome/esphome.md) for complete package system guid
 ├───────────┬─────────────────────────────────────┤
 │           │                                     │
 │ Electric  │        MAIN MENU                    │
-│ Water     │   SmartEBL Display System           │
+│ Tanks     │   SmartEBL Display System           │
 │ Climate   │  Select a section from the menu     │
 │ Status    │                                     │
 │ Power     │                                     │

@@ -54,30 +54,31 @@ Visual representation of all display pages (7" - 800x480px).
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
-│  ✓ ALL SYSTEMS NORMAL                                              │
+│  12:34  Jan 28                         Inside: 21°C  Outside: 5°C  │
 │                                                                     │
-├───────────────┬─────────────────────────────────────────────────────┤
-│               │                                                     │
-│   Electric    │                                                     │
-│               │                                                     │
-│               │              MAIN MENU                              │
-│   Water       │                                                     │
-│               │         SmartEBL Display System                     │
-│               │                                                     │
-│   Climate     │      Select a section from the menu                 │
-│               │                                                     │
-│               │                                                     │
-│   Status      │                                                     │
-│               │                                                     │
-│               │                                                     │
-│   Power       │                                                     │
-│               │                                                     │
-└───────────────┴─────────────────────────────────────────────────────┘
+├──────────┬──────────────────────────────────────────────────────────┤
+│          │                                                          │
+│ Electric │                                                          │
+│          │                                                          │
+│          │              MAIN MENU                                   │
+│  Tanks   │                                                          │
+│          │         SmartEBL Display System                          │
+│          │                                                          │
+│ Climate  │      Select a section from the menu                      │
+│          │                                                          │
+│          │                                                          │
+│  Status  │                                                          │
+│          │                                                          │
+│          │                                                          │
+│  Power   │                                                          │
+│          │                                                          │
+└──────────┴──────────────────────────────────────────────────────────┘
 ```
 
 **Key Features:**
-- Master Warning text at top (green = normal)
-- 5 menu buttons on left (150px wide)
+- Status bar at top (80px high) showing time, date, and temperatures
+- 5 menu buttons on left (100px wide, optimized for content)
+- Page indicator integrated into active menu button
 - Large content area for welcome message
 - Clean, minimal design
 
@@ -87,31 +88,31 @@ Visual representation of all display pages (7" - 800x480px).
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                1/2  │
-│  ✓ ALL SYSTEMS NORMAL                                              │
 │                                                                     │
-├───────────────┬─────────────────────────────────────────────────────┤
-│               │                                                     │
-│ ━━Electric━━  │   BATTERY STATUS                                    │
-│               │                                                     │
-│   Water       │   Voltage:     12.8V                                │
-│               │   Current:      5.2A                                │
-│   Climate     │   SOC:          78%  🟢                             │
-│               │                                                     │
-│   Status      │   SOLAR                                             │
-│               │   Power:       245W                                 │
-│   Power       │   Status:      Charging  🟢                         │
-│               │                                                     │
-│               │   SHORE POWER                                       │
-│               │   Status:      Disconnected                         │
-│               │                                                     │
-│               │                                   [ Next Page → ]   │
-└───────────────┴─────────────────────────────────────────────────────┘
+│  12:34  Jan 28                         Inside: 21°C  Outside: 5°C  │
+│                                                                     │
+├──────────┬──────────────────────────────────────────────────────────┤
+│          │                                                          │
+│ Electric │   BATTERY STATUS                                         │
+│   1/2    │                                                          │
+│          │   Voltage:     12.8V                                     │
+│  Tanks   │   Current:      5.2A                                     │
+│          │   SOC:          78%  🟢                                  │
+│ Climate  │                                                          │
+│          │   SOLAR                                                  │
+│  Status  │   Power:       245W                                      │
+│          │   Status:      Charging  🟢                              │
+│  Power   │                                                          │
+│          │   SHORE POWER                                            │
+│          │   Status:      Disconnected                              │
+│          │                                                          │
+│          │                                   [ Next Page → ]        │
+└──────────┴──────────────────────────────────────────────────────────┘
 ```
 
 **Key Features:**
-- Active button highlighted (━━Electric━━ in green with underline)
-- Page counter (1/2) top right
+- Active button highlighted in green (no underline)
+- Page indicator (1/2) integrated into active button below section name
 - Battery status with color-coded SOC
 - Next page button bottom right
 
@@ -121,26 +122,26 @@ Visual representation of all display pages (7" - 800x480px).
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                1/2  │
-│  ⚠️ MASTER WARNING                                                  │
 │                                                                     │
-├───────────────┬─────────────────────────────────────────────────────┤
-│               │                                                     │
-│   Electric    │   FUSES                                             │
-│               │                                                     │
-│   Water       │   🔴 Fuse.1 Main      🟢 Fuse.2 Lights             │
-│               │   🟢 Fuse.3 Water     🟢 Fuse.4 Heater             │
-│   Climate     │   🔴 Fuse.5 12V Aux   🟢 Fuse.6 Fridge             │
-│               │   🟢 Fuse.7 Pump      🟢 Fuse.8 Outlet             │
-│ ━━Status━━    │   🟢 Fuse.9 Climate   🟢 Fuse.10 USB              │
-│               │                                                     │
-│   Power       │   ELECTRICAL STATUS                                 │
-│               │   Battery:    12.8V (78%) 🟢                        │
-│               │   Solar:      245W        🟢                        │
-│               │   Shore:      Disconnected                          │
-│               │                                                     │
-│               │                                   [ Next Page → ]   │
-└───────────────┴─────────────────────────────────────────────────────┘
+│  ⚠️ MASTER WARNING: Fuse.1 Main, Fuse.5 12V Aux                    │
+│                                                                     │
+├──────────┬──────────────────────────────────────────────────────────┤
+│          │                                                          │
+│ Electric │   FUSES                                                  │
+│          │                                                          │
+│  Tanks   │   🔴 Fuse.1 Main      🟢 Fuse.2 Lights                  │
+│          │   🟢 Fuse.3 Tanks     🟢 Fuse.4 Heater                  │
+│ Climate  │   🔴 Fuse.5 12V Aux   🟢 Fuse.6 Fridge                  │
+│          │   🟢 Fuse.7 Pump      🟢 Fuse.8 Outlet                  │
+│  Status  │   🟢 Fuse.9 Climate   🟢 Fuse.10 USB                    │
+│   1/2    │                                                          │
+│  Power   │   ELECTRICAL STATUS                                      │
+│          │   Battery:    12.8V (78%) 🟢                             │
+│          │   Solar:      245W        🟢                             │
+│          │   Shore:      Disconnected                               │
+│          │                                                          │
+│          │                                   [ Next Page → ]        │
+└──────────┴──────────────────────────────────────────────────────────┘
 ```
 
 **Key Features:**
@@ -151,26 +152,26 @@ Visual representation of all display pages (7" - 800x480px).
 
 ---
 
-### Master Warning States
+### Status Bar States
 
-#### Normal State (Green)
+#### Normal State (Green) - Shows Time, Date, and Temperatures
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  ✓ ALL SYSTEMS NORMAL                                              │
+│  12:34  Jan 28                         Inside: 21°C  Outside: 5°C  │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-#### Master Caution (Orange)
+#### Master Caution (Orange) - Replaces normal info with warning
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  ⚡ MASTER CAUTION                                                  │
+│  ⚡ MASTER CAUTION: Low Fresh Water, Battery Below 50%              │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-#### Master Warning (Red)
+#### Master Warning (Red) - Critical alerts take priority
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  ⚠️ MASTER WARNING                                                  │
+│  ⚠️ MASTER WARNING: Fuse.1 Main Blown, Fuse.5 12V Aux Blown        │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -183,14 +184,14 @@ Visual representation of all display pages (7" - 800x480px).
                                │
         ┌──────────────┬───────┼───────┬──────────────┐
         │              │       │       │              │
-    ELECTRIC        WATER   CLIMATE  STATUS        POWER
+    ELECTRIC        TANKS   CLIMATE  STATUS        POWER
    (Pages 1-2)   (Pages 3-4) (5-6)  (Pages 7-8)  (Pages 9-10)
         │              │       │       │              │
         ↓              ↓       ↓       ↓              ↓
-    Electric_1     Water_1  Climate_1 Status_1    Power_1
+    Electric_1     Tanks_1  Climate_1 Status_1    Power_1
         │              │       │       │              │
         ↓              ↓       ↓       ↓              ↓
-    Electric_2     Water_2  Climate_2 Status_2    Power_2
+    Electric_2     Tanks_2  Climate_2 Status_2    Power_2
         │              │       │       │              │
         └──────────────┴───────┴───────┴──────────────┘
                           │
@@ -205,20 +206,20 @@ Visual representation of all display pages (7" - 800x480px).
 
 #### Inactive Menu Button
 ```
-┌───────────────┐
-│               │
-│   Electric    │  ← White (65535)
-│               │
-└───────────────┘
+┌──────────┐
+│          │
+│ Electric │  ← White (65535)
+│          │
+└──────────┘
 ```
 
-#### Active Menu Button (Current Section)
+#### Active Menu Button (Current Section with Page Indicator)
 ```
-┌───────────────┐
-│               │
-│ ━━Electric━━  │  ← Green (2016) + Underline
-│               │
-└───────────────┘
+┌──────────┐
+│          │
+│ Electric │  ← Green (2016) text
+│   1/2    │  ← Page indicator below section name
+└──────────┘
 ```
 
 ---
@@ -262,19 +263,18 @@ pco2=65535   // Press Color 2 = Transparent
 
 **Buttons:**
 - White (65535): Default / Inactive
-- Green (2016): Active section
-- Underline: Visual indicator for active
+- Green (2016): Active section (text color only, no underline)
 
-**Alarms:**
-- Green (2016): All systems OK
+**Status Bar:**
+- Green (2016): Normal state - shows time, date, temperatures
 - Orange (64512): Warning (Caution) - attention needed
 - Red (63488): Critical (Warning) - action required
 
-**Scrolling Text Examples:**
+**Status Bar Examples:**
 ```
-Green:  "✓ ALL SYSTEMS NORMAL"
-Orange: "⚡ MASTER CAUTION"
-Red:    "⚠️ MASTER WARNING"
+Green:  "12:34  Jan 28                         Inside: 21°C  Outside: 5°C"
+Orange: "⚡ MASTER CAUTION: Low Fresh Water, Battery Below 50%"
+Red:    "⚠️ MASTER WARNING: Fuse.1 Main Blown, Fuse.5 12V Aux Blown"
 ```
 
 ### RGB to Nextion Decimal Conversion
@@ -305,67 +305,68 @@ Decimal = (0 << 11) | (0 << 5) | 31 = 31
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ 0─────────────────── Header (50px) ─────────────────800│
+│ 0─────────────────── Header (80px) ─────────────────800│
 │                                                         │
-│ 0  Menu   │                                             │
-│    (150)  │         Content Area                        │
-│           │         (650x430)                           │
-│           │                                             │
-│           │                                             │
-│           │                                             │
-│           │                                             │
-│           │                                             │
-│ 480       │                                             │
-└───────────┴─────────────────────────────────────────────┘
-    0     150                                           800
+│ 0 Menu │                                                │
+│  (100) │         Content Area                           │
+│        │         (700x400)                              │
+│        │                                                │
+│        │                                                │
+│        │                                                │
+│        │                                                │
+│        │                                                │
+│ 480    │                                                │
+└────────┴────────────────────────────────────────────────┘
+    0   100                                             800
 ```
 
 ### Layout Zones
 
-**1. Header Zone (y=0-50)**
-- Scrolling text (Master Warning/Caution) - left
-- Page counter - right (x=700)
-- Height: 50px
+**1. Header/Status Bar Zone (y=0-80)**
+- In normal state: Time, Date (left) | Inside/Outside temps (right)
+- In alert state: Master Warning/Caution text (scrolling if needed)
+- Height: 80px (matches button height for visual consistency)
 - Always visible on all pages
 
-**2. Menu Zone (x=0-150, y=50-480)**
+**2. Menu Zone (x=0-100, y=80-480)**
 - 5 vertical buttons
-- Each button: 80px high, 10px spacing
-- Width: 150px
+- Each button: 80px high
+- Width: 100px (optimized to fit longest section name "Electric" & "Climate")
+- Page indicator (e.g., "1/2") displays below section name on active button only
 - Persistent across all pages
 
-**3. Content Zone (x=150-800, y=50-480)**
+**3. Content Zone (x=100-800, y=80-480)**
 - Freely designable area
-- Size: 650 x 430 px
+- Size: 700 x 400 px
 - Recommended: 20px padding from edges
 - Page-specific content
 
 ### Detailed Grid
 
 ```
-    0        150                                                   800
-    ├─────────┼────────────────────────────────────────────────────┤
-    │         │                                                    │  0
-    │  MENU   │              HEADER (Alert Text)                   │
-    │         │                                                    │  50
-    ├─────────┼────────────────────────────────────────────────────┤
-    │         │                                                    │
-    │         │                                                    │
-    │ Button  │                                                    │
-    │ Button  │                                                    │
-    │ Button  │            CONTENT AREA                            │
-    │ Button  │            (650 x 430 px)                          │
-    │ Button  │                                                    │
-    │         │                                                    │
-    │         │                                                    │
-    │         │                                                    │
-    │         │                                                    │  480
-    └─────────┴────────────────────────────────────────────────────┘
+    0       100                                                   800
+    ├────────┼──────────────────────────────────────────────────────┤
+    │        │                                                      │  0
+    │  MENU  │         STATUS BAR (Time/Date/Temps or Alerts)       │
+    │        │                                                      │  80
+    ├────────┼──────────────────────────────────────────────────────┤
+    │        │                                                      │
+    │        │                                                      │
+    │ Button │                                                      │
+    │ Button │                                                      │
+    │ Button │            CONTENT AREA                              │
+    │ Button │            (700 x 400 px)                            │
+    │ Button │                                                      │
+    │        │                                                      │
+    │        │                                                      │
+    │        │                                                      │
+    │        │                                                      │  480
+    └────────┴──────────────────────────────────────────────────────┘
 
-Menu Width:    150px
-Content Width: 650px
-Header Height: 50px
-Content Height: 430px
+Menu Width:    100px
+Content Width: 700px
+Status Bar Height: 80px
+Content Height: 400px
 ```
 
 ---
@@ -405,9 +406,10 @@ Content Height: 430px
 ### Buttons
 
 **Menu Buttons (vertical):**
-- Size: w=150, h=80
-- Spacing: 10px vertical
+- Size: w=100, h=80
+- No vertical spacing (buttons are continuous)
 - Touch-friendly for fingers
+- Active button displays page indicator below section name (e.g., "Electric" then "1/2" below)
 
 **Action Buttons (e.g., "Next"):**
 - Size: w=120, h=50
@@ -417,14 +419,15 @@ Content Height: 430px
 **Touch Area Guidelines:**
 - Minimum: 60x60 px (for reliable touch)
 - Recommended: 80x80 px or larger
-- Menu buttons: 150x80 px (very comfortable)
+- Menu buttons: 100x80 px (optimized and comfortable)
 
 ### Text Components
 
-**Scrolling Text (Master Warning):**
-- Height: 50px (for 24pt Font + padding)
-- Width: 800px (full width) or 650px (with page counter)
-- Scrolls when text > width
+**Status Bar Text:**
+- Height: 80px (matches button height)
+- Width: 800px (full width)
+- Normal state shows: Time, Date (left) | Temps (right)
+- Alert state shows: scrolling warning/caution text when text > width
 
 **Value Display:**
 - Height: 40-50px
@@ -439,9 +442,9 @@ Content Height: 430px
 ### Touch Areas Summary
 
 ```
-Menu Buttons: 150x80 px (easily accessible)
+Menu Buttons: 100x80 px (optimized and accessible)
 Next Button:  120x50 px (bottom right)
-Alert Text:   800x50 px (top, clickable for status if configured)
+Status Bar:   800x80 px (top, non-interactive - displays info/alerts)
 ```
 
 ---
@@ -451,9 +454,9 @@ Alert Text:   800x50 px (top, clickable for status if configured)
 ### Horizontal Navigation (Between Sections)
 
 ```
-Electric → Water → Climate → Status → Power
+Electric → Tanks → Climate → Status → Power
    ↓         ↓         ↓         ↓       ↓
-Electric_1 Water_1  Climate_1  Status_1 Power_1
+Electric_1 Tanks_1  Climate_1  Status_1 Power_1
 ```
 
 **Always via menu buttons on the left**
@@ -669,23 +672,23 @@ if(new_value\!=old_value)
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ ✓ ALL SYSTEMS NORMAL                           1/2     │
-├───────────┬─────────────────────────────────────────────┤
-│           │                                             │
-│ Electric  │  [SECTION TITLE]                            │
-│           │                                             │
-│ Water     │  Label1: Value1                             │
-│           │  Label2: Value2                             │
-│ Climate   │  Label3: Value3                             │
-│           │                                             │
-│ Status    │                                             │
-│           │                          [Next →]           │
-│ Power     │                                             │
-│           │                                             │
-└───────────┴─────────────────────────────────────────────┘
+│ 12:34  Jan 28                 Inside: 21°C  Outside: 5°C│
+├──────────┬──────────────────────────────────────────────┤
+│          │                                              │
+│ Electric │  [SECTION TITLE]                             │
+│   1/2    │                                              │
+│  Tanks   │  Label1: Value1                              │
+│          │  Label2: Value2                              │
+│ Climate  │  Label3: Value3                              │
+│          │                                              │
+│  Status  │                                              │
+│          │                          [Next →]            │
+│  Power   │                                              │
+│          │                                              │
+└──────────┴──────────────────────────────────────────────┘
 ```
 
-**Use for**: Electric, Water, Climate, Power sections
+**Use for**: Electric, Tanks, Climate, Power sections
 
 ---
 
@@ -693,20 +696,20 @@ if(new_value\!=old_value)
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ ⚠️ MASTER WARNING                              1/2     │
-├───────────┬─────────────────────────────────────────────┤
-│           │  🔴 Item.1   🟢 Item.2   🟢 Item.3         │
-│ Electric  │  🟢 Item.4   🔴 Item.5   🟢 Item.6         │
-│           │  🟢 Item.7   🟢 Item.8   🟢 Item.9         │
-│ Water     │                                             │
-│           │  STATUS SUMMARY                             │
-│ Climate   │  Field1: Value1  🟢                         │
-│           │  Field2: Value2  🟢                         │
-│ Status    │  Field3: Value3  🔴                         │
-│           │                          [Next →]           │
-│ Power     │                                             │
-│           │                                             │
-└───────────┴─────────────────────────────────────────────┘
+│ ⚠️ MASTER WARNING: Item.1, Item.5                      │
+├──────────┬──────────────────────────────────────────────┤
+│          │  🔴 Item.1   🟢 Item.2   🟢 Item.3          │
+│ Electric │  🟢 Item.4   🔴 Item.5   🟢 Item.6          │
+│          │  🟢 Item.7   🟢 Item.8   🟢 Item.9          │
+│  Tanks   │                                              │
+│          │  STATUS SUMMARY                              │
+│ Climate  │  Field1: Value1  🟢                          │
+│          │  Field2: Value2  🟢                          │
+│  Status  │  Field3: Value3  🔴                          │
+│   1/2    │                          [Next →]            │
+│  Power   │                                              │
+│          │                                              │
+└──────────┴──────────────────────────────────────────────┘
 ```
 
 **Use for**: Status section (fuses, system overview)
@@ -753,13 +756,13 @@ if(new_value\!=old_value)
 
 When creating new pages, ensure:
 
-- [ ] Scrolling text at same position (y=0)
-- [ ] Menu buttons at same position (x=0, y=50-480)
-- [ ] Page counter at same position (x=700, y=10)
+- [ ] Status bar at same position (y=0, height=80px)
+- [ ] Menu buttons at same position (x=0, y=80-480, width=100px)
+- [ ] Page indicator integrated into active menu button (not separate)
 - [ ] Same fonts for same element types
 - [ ] Transparent backgrounds (bco=65535)
 - [ ] Touch events follow same pattern
-- [ ] Page Preinit sets button highlighting correctly
+- [ ] Page Preinit sets button highlighting correctly (green text, no underline)
 - [ ] Color scheme followed (Green/Orange/Red)
 
 ---
