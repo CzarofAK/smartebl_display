@@ -1,12 +1,12 @@
 # ============================================
-# SmartEBL Display - Tanks Section
+# SmartEBL Display - Levels Section
 # ============================================
 # Template for all tank/fluid monitoring systems
 # Includes: Fresh/Waste Water, Diesel, AdBlue, Gas Bottles
 #
 # Import in your main.yaml:
 #   packages:
-#     tanks: github://CzarofAK/smartebl_display/esphome/sections/tanks.yaml@main
+#     levels: github://CzarofAK/smartebl_display/esphome/sections/levels.yaml@main
 
 # ============================================
 # TEMPLATE - CUSTOMIZATION REQUIRED!
@@ -28,7 +28,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            // Update Nextion (Tanks_1 Page)
+            // Update Nextion (Levels_1 Page)
             char buffer[20];
             snprintf(buffer, sizeof(buffer), "%.0fL", x);
             id(nextion_display).set_component_text("tank_fresh", buffer);
@@ -39,7 +39,7 @@ sensor:
             int color = (percent < 20) ? 63488 : (percent < 40) ? 64512 : 2016;
             id(nextion_display).set_component_value("tank_fresh.pco", color);
 
-            // Also update large display on Tanks_2 (external fill page)
+            // Also update large display on Levels_2 (external fill page)
             snprintf(buffer, sizeof(buffer), "%.0f%%", percent);
             id(nextion_display).set_component_text("tank_fresh_large", buffer);
             id(nextion_display).set_component_text("txt_fresh_percent", buffer);
@@ -53,7 +53,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            // Update Nextion (Tanks_1 Page)
+            // Update Nextion (Levels_1 Page)
             char buffer[20];
             snprintf(buffer, sizeof(buffer), "%.0fL", x);
             id(nextion_display).set_component_text("tank_waste", buffer);
@@ -73,7 +73,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            // Update Nextion (Tanks_1 Page)
+            // Update Nextion (Levels_1 Page)
             char buffer[20];
             snprintf(buffer, sizeof(buffer), "%.0fL", x);
             id(nextion_display).set_component_text("tank_diesel", buffer);
@@ -93,7 +93,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            // Update Nextion (Tanks_1 Page)
+            // Update Nextion (Levels_1 Page)
             char buffer[20];
             snprintf(buffer, sizeof(buffer), "%.0fL", x);
             id(nextion_display).set_component_text("tank_adblue", buffer);
@@ -113,7 +113,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            // Update Nextion (Tanks_1 Page)
+            // Update Nextion (Levels_1 Page)
             char buffer[20];
             snprintf(buffer, sizeof(buffer), "%.0f%%", x);
             id(nextion_display).set_component_text("tank_gas1", buffer);
@@ -131,7 +131,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            // Update Nextion (Tanks_1 Page)
+            // Update Nextion (Levels_1 Page)
             char buffer[20];
             snprintf(buffer, sizeof(buffer), "%.0f%%", x);
             id(nextion_display).set_component_text("tank_gas2", buffer);
@@ -171,7 +171,7 @@ switch:
 # NEXTION COMPONENTS (Reference)
 # ============================================
 #
-# Required on Tanks_1 Page:
+# Required on Levels_1 Page:
 # - Text "tank_fresh"   → Fresh Water Level (with color)
 # - Text "tank_waste"   → Waste Water Level (with color)
 # - Text "tank_diesel"  → Diesel Level (with color)
@@ -180,7 +180,7 @@ switch:
 # - Text "tank_gas2"    → Gas Bottle 2 Level (with color)
 # - Button "btn_pump"   → Water Pump ON/OFF (with color)
 #
-# Required on Tanks_2 Page (External Fill Display):
+# Required on Levels_2 Page (External Fill Display):
 # - Text "tank_fresh_large"   → Large Fresh Water display
 # - Text "txt_fresh_percent"  → Fresh Water percentage
 

@@ -68,7 +68,7 @@ The SmartEBL Display uses **11 pages** organized into 6 sections:
 |---------|------|-------------|
 | 0 | Home | Main menu with 5 section buttons |
 | 1-2 | Electric_1, Electric_2 | Electrical systems (battery, solar, shore) |
-| 3-4 | Tanks_1, Tanks_2 | All fluid levels (fresh/waste water, diesel, AdBlue, gas) + pump control |
+| 3-4 | Levels_1, Levels_2 | All fluid levels (fresh/waste water, diesel, AdBlue, gas) + pump control |
 | 5-6 | Climate_1, Climate_2 | Climate & heating |
 | 7-8 | Status_1, Status_2 | System status & alarms |
 | 9-10 | Power_1, Power_2 | Energy & power management |
@@ -92,7 +92,7 @@ Add these to **Program.s**:
 
 ```c
 // Current section tracker
-// 0=Home, 1=Electric, 2=Tanks, 3=Climate, 4=Status, 5=Power
+// 0=Home, 1=Electric, 2=Levels, 3=Climate, 4=Status, 5=Power
 int currentSection=0
 
 // Current page within section (0=first page, 1=second page)
@@ -142,7 +142,7 @@ int powerPages=2
 | xcen | 0 (left aligned in normal mode, centered in alert mode) |
 | ycen | 1 (vertically centered) |
 
-**Normal State Text**: `12:34  Jan 28                         Inside: 21°C  Outside: 5°C`
+**Normal State Text**: `12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C`
 **Caution State Text**: `⚡ MASTER CAUTION: [caution messages]`
 **Warning State Text**: `⚠️ MASTER WARNING: [warning messages]`
 
@@ -171,7 +171,7 @@ Each button follows this template:
 | Button | Name | Position | Text | Touch Event |
 |--------|------|----------|------|-------------|
 | Electric | `btn_electric` | x=0, y=80 | "Electric" | See below |
-| Tanks | `btn_tanks` | x=0, y=160 | "Tanks" | See below |
+| Levels | `btn_tanks` | x=0, y=160 | "Levels" | See below |
 | Climate | `btn_climate` | x=0, y=240 | "Climate" | See below |
 | Status | `btn_status` | x=0, y=320 | "Status" | See below |
 | Power | `btn_power` | x=0, y=400 | "Power" | See below |
@@ -193,7 +193,7 @@ Each button follows this template:
 | Indicator | Name | Position | Text |
 |-----------|------|----------|------|
 | Electric | `txt_electric_page` | x=0, y=105 | "1/2" or "2/2" |
-| Tanks | `txt_tanks_page` | x=0, y=185 | "1/2" or "2/2" |
+| Levels | `txt_tanks_page` | x=0, y=185 | "1/2" or "2/2" |
 | Climate | `txt_climate_page` | x=0, y=265 | "1/2" or "2/2" |
 | Status | `txt_status_page` | x=0, y=345 | "1/2" or "2/2" |
 | Power | `txt_power_page` | x=0, y=425 | "1/2" or "2/2" |
@@ -214,7 +214,7 @@ page Electric_1
 // btn_tanks
 currentSection=2
 currentPage=0
-page Tanks_1
+page Levels_1
 
 // btn_climate
 currentSection=3
@@ -303,7 +303,7 @@ if(currentSection==1)
   page Electric_1
 }
 
-// btn_tanks - Jump to Tanks section or cycle through Tanks pages
+// btn_tanks - Jump to Levels section or cycle through Levels pages
 if(currentSection==2)
 {
   currentPage++
@@ -313,14 +313,14 @@ if(currentSection==2)
   }
   if(currentPage==0)
   {
-    page Tanks_1
+    page Levels_1
   }else{
-    page Tanks_2
+    page Levels_2
   }
 }else{
   currentSection=2
   currentPage=0
-  page Tanks_1
+  page Levels_1
 }
 
 // btn_climate - Jump to Climate section or cycle through Climate pages
@@ -436,11 +436,11 @@ sich_4:  x=170, y=120, w=180, h=40
 ...
 ```
 
-**Tanks Section (Pages 3-4) - Detailed Layout:**
+**Levels Section (Pages 3-4) - Detailed Layout:**
 
-The Tanks section provides comprehensive monitoring of all fluid levels in the motorhome.
+The Levels section provides comprehensive monitoring of all fluid levels in the motorhome.
 
-**Page 3: Tanks_1 - Complete Fluid Overview**
+**Page 3: Levels_1 - Complete Fluid Overview**
 
 This page displays all tank and fluid levels on a single overview page with quick pump control access.
 
@@ -460,7 +460,7 @@ This page displays all tank and fluid levels on a single overview page with quic
 - Grid layout (2 columns × 3 rows) for organized presentation
 - Color-coded levels (Green=OK, Orange=Low, Red=Critical)
 
-**Page 4: Tanks_2 - External Fill Display**
+**Page 4: Levels_2 - External Fill Display**
 
 This page is optimized for viewing through the outside window while filling fresh water from external connections.
 
