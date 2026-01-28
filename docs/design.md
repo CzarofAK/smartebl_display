@@ -84,37 +84,84 @@ Visual representation of all display pages (7" - 800x480px).
 
 ---
 
-### Electric Page 1 (Page 1)
+### Electric Page 1 (Page 1) - Victron-Style Power Flow Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
 │  12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C  │
-│                                                                     │
 ├──────────┬──────────────────────────────────────────────────────────┤
-│          │                                                          │
-│ Electric │   BATTERY STATUS                                         │
-│   1/2    │                                                          │
-│          │   Voltage:     12.8V                                     │
-│  Levels   │   Current:      5.2A                                     │
-│          │   SOC:          78%  🟢                                  │
-│ Climate  │                                                          │
-│          │   SOLAR                                                  │
-│  Status  │   Power:       245W                                      │
-│          │   Status:      Charging  🟢                              │
-│  Power   │                                                          │
-│          │   SHORE POWER                                            │
-│          │   Status:      Disconnected                              │
-│          │                                                          │
-│          │                                   [ Next Page → ]        │
+│ Electric │  ┌──────────┐     ┌──────────────┐     ┌──────────┐    │
+│   1/2    │  │⚡Shore   │────▶│🔌 Inverter/  │────▶│⏻ AC     │    │
+│          │  │  91W     │     │   Charger    │     │  Loads   │    │
+│  Levels  │  └──────────┘     │  External    │     │  11W     │    │
+│          │                   │  control     │     └──────────┘    │
+│ Climate  │                   └──────┬───────┘                     │
+│          │                          │                             │
+│  Status  │  ┌──────────┐           ▼           ┌──────────┐      │
+│          │  │☀ Solar   │     ┌──────────┐     │⚡DC      │      │
+│  Power   │  │  Yield   │────▶│🔋Battery │────▶│  Loads   │      │
+│          │  │  0W      │     │  100%    │     │  65W     │      │
+│          │  └──────────┘     │ Charging │     └──────────┘      │
+│          │                   │ 14.10V   │                       │
+│          │                   │  0.4A 6W │                       │
+│          │                   │   3°C    │                       │
+│          │                   └──────────┘                       │
 └──────────┴──────────────────────────────────────────────────────────┘
 ```
 
 **Key Features:**
-- Active button highlighted in green (no underline)
-- Page indicator (1/2) integrated into active button below section name
-- Battery status with color-coded SOC
-- Next page button bottom right
+- **Victron Venus OS inspired** power flow diagram
+- Visual flow lines showing energy paths
+- **6 information boxes**:
+  - Shore power (top-left): Power input
+  - Inverter/Charger (top-center): External control status
+  - AC Loads (top-right): AC consumption
+  - Solar Yield (bottom-left): Solar power input
+  - Battery (bottom-center): LARGE box - SOC%, status, voltage, current, power, temp
+  - DC Loads (bottom-right): DC consumption
+- Real-time power flow visualization
+- Battery box is emphasized (larger, blue background)
+
+---
+
+### Levels Page 1 (Page 3) - Victron-Style Vertical Tank Display
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C  │
+├──────────┬──────────────────────────────────────────────────────────┤
+│ Electric │  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐  ┌─────┐           │
+│          │  │Fresh│  │Waste│  │FRAM-│  │Gas 1│  │Gas 2│           │
+│  Levels  │  │  💧 │  │  💧 │  │Diesel│ │  🔥 │  │  🔥 │           │
+│   1/2    │  ├─────┤  ├─────┤  ├─────┤  ├─────┤  ├─────┤           │
+│          │  │     │  │█████│  │█████│  │█████│  │█████│           │
+│ Climate  │  │  ⚠  │  │     │  │█████│  │█████│  │█████│           │
+│          │  │     │  │     │  │█████│  │█████│  │█████│           │
+│  Status  │  │     │  │     │  │     │  │█████│  │█████│           │
+│          │  │     │  │     │  │     │  │     │  │     │           │
+│  Power   │  ├─────┤  ├─────┤  ├─────┤  ├─────┤  ├─────┤           │
+│          │  │  0% │  │  9% │  │ 73% │  │100% │  │100% │           │
+│          │  │0/120ℓ│ │8/80ℓ│  │67/92ℓ│ │20/20ℓ│ │20/20ℓ│         │
+│          │  └─────┘  └─────┘  └─────┘  └─────┘  └─────┘  [Pump]   │
+└──────────┴──────────────────────────────────────────────────────────┘
+```
+
+**Key Features:**
+- **Victron Venus OS inspired** vertical tank display
+- **5 vertical tank columns** with segmented bars:
+  - **Fresh Water** (Cyan header): 0% with warning triangle
+  - **Waste Water** (Cyan header): 9% filled
+  - **FRAM-Diesel** (Yellow header): 73% filled
+  - **Gas 1** (Purple header): 100% filled
+  - **Gas 2** (Purple header): 100% filled
+- Each tank shows:
+  - Icon in header (💧 for water, 🔥 for gas, ⛽ for diesel)
+  - Large percentage display at bottom
+  - Actual/Max values (e.g., "67/92ℓ")
+  - Warning triangle (⚠) when critically low/high
+- Visual fill level with segmented bars (4-5 segments)
+- Color-coded: Red when critical, Blue when OK
+- **[Pump]** button for water pump control
 
 ---
 
@@ -149,6 +196,49 @@ Visual representation of all display pages (7" - 800x480px).
 - Grid layout for 18 fuses (3 columns)
 - Color-coded status (🔴 = blown, 🟢 = OK)
 - Quick electrical summary
+
+---
+
+### Power Page 1 (Page 9) - SmartEBL Relay Controls
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C  │
+├──────────┬──────────────────────────────────────────────────────────┤
+│ Electric │                                                          │
+│          │           SMARTEBL RELAY CONTROLS                        │
+│  Levels  │                                                          │
+│          │     ┌──────────┐      ┌──────────┐      ┌──────────┐   │
+│ Climate  │     │  💡      │      │  👤      │      │  ⚡      │   │
+│          │     │  Light   │      │  User    │      │  Aux     │   │
+│  Status  │     │          │      │          │      │          │   │
+│          │     │   ON     │      │   OFF    │      │   ON     │   │
+│  Power   │     └──────────┘      └──────────┘      └──────────┘   │
+│   1/2    │                                                          │
+│          │     ┌──────────┐      ┌──────────┐                     │
+│          │     │  💧      │      │  ❄️      │                     │
+│          │     │  Pump    │      │  Fridge  │                     │
+│          │     │          │      │          │                     │
+│          │     │   OFF    │      │   ON     │                     │
+│          │     └──────────┘      └──────────┘                     │
+└──────────┴──────────────────────────────────────────────────────────┘
+```
+
+**Key Features:**
+- **5 SmartEBL relay control buttons**:
+  - **Light** 💡 - Interior/exterior lighting control
+  - **User** 👤 - User-configurable relay
+  - **Aux** ⚡ - Auxiliary power control
+  - **Pump** 💧 - Water pump control
+  - **Fridge** ❄️ - Fridge power control
+- Each button shows:
+  - Icon representing function
+  - Label
+  - Current state (ON/OFF)
+  - Color indication (Green=ON, Red=OFF or Gray=OFF)
+- Touch to toggle relay state
+- Large touch-friendly buttons (120x100px)
+- Bidirectional control with Home Assistant
 
 ---
 
@@ -216,11 +306,13 @@ Visual representation of all display pages (7" - 800x480px).
 #### Active Menu Button (Current Section with Page Indicator)
 ```
 ┌──────────┐
+│ Electric │  ← Green (2016) text - ALWAYS at top (y=10 in button)
 │          │
-│ Electric │  ← Green (2016) text
-│   1/2    │  ← Page indicator below section name
+│   1/2    │  ← Page indicator below - ALWAYS at bottom (y=55 in button)
 └──────────┘
 ```
+
+**Important**: Section text is always positioned at y=10 relative to button top. Page indicator is always at y=55. This prevents text jumping when page indicator appears/disappears. The page indicator text is simply hidden (txt="") when not active.
 
 ---
 
