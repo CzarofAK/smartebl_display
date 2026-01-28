@@ -12,10 +12,16 @@ Master Warning/Caution system inspired by aviation cockpits - modular, transpare
 - 📱 **5 Main Sections** - Electric, Tanks, Climate, Status, Power
 - 🔍 **Transparent Design** - Minimalist, text-only interface for maximum clarity
 - 📊 **Complete Status Overview** - Up to 18 fuses + tank levels + electrical systems
-- 🎯 **Intuitive Touch Navigation** - Easy operation while driving
+- 🎯 **Intuitive Touch Navigation** - Easy operation
 - 🔧 **Modular Architecture** - ESPHome packages for easy mix & match
 - 🏠 **Home Assistant Integration** - Real-time data from all sensors
 - ⚡ **Package System** - Seamlessly integrates with [SmartEBL](https://github.com/CzarofAK/smartebl)
+
+---
+
+## Demo
+
+find here the Demo: 
 
 ---
 
