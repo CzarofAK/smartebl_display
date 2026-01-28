@@ -68,7 +68,7 @@ The SmartEBL Display uses **11 pages** organized into 6 sections:
 |---------|------|-------------|
 | 0 | Home | Main menu with 5 section buttons |
 | 1-2 | Electric_1, Electric_2 | Electrical systems (battery, solar, shore) |
-| 3-4 | Water_1, Water_2 | Water systems (tanks, pumps) |
+| 3-4 | Tanks_1, Tanks_2 | All fluid levels (fresh/waste water, diesel, AdBlue, gas) + pump control |
 | 5-6 | Climate_1, Climate_2 | Climate & heating |
 | 7-8 | Status_1, Status_2 | System status & alarms |
 | 9-10 | Power_1, Power_2 | Energy & power management |
@@ -80,7 +80,7 @@ The SmartEBL Display uses **11 pages** organized into 6 sections:
                           │
       ┌───────────┬────────┼────────┬───────────┐
       │           │        │        │           │
-   ELECTRIC    WATER   CLIMATE   STATUS      POWER
+   ELECTRIC    TANKS   CLIMATE   STATUS      POWER
   (Pages 1-2) (3-4)    (5-6)    (7-8)      (9-10)
 ```
 
@@ -92,7 +92,7 @@ Add these to **Program.s**:
 
 ```c
 // Current section tracker
-// 0=Home, 1=Electric, 2=Water, 3=Climate, 4=Status, 5=Power
+// 0=Home, 1=Electric, 2=Tanks, 3=Climate, 4=Status, 5=Power
 int currentSection=0
 
 // Current page within section (0=first page, 1=second page)
@@ -100,7 +100,7 @@ int currentPage=0
 
 // Number of pages per section
 int electricPages=2
-int waterPages=2
+int tanksPages=2
 int climatePages=2
 int statusPages=2
 int powerPages=2
@@ -124,25 +124,32 @@ int powerPages=2
 
 #### Components
 
-**1. Scrolling Text - Master Warning/Caution**
+**1. Status Bar - Time/Date and Temperature Display**
 
 | Property | Value |
 |----------|-------|
-| Type | Scrolling Text |
-| Name | `txt_alert` |
+| Type | Text / Scrolling Text (when in alert mode) |
+| Name | `txt_status_bar` |
 | Position | x=0, y=0 |
-| Size | w=800, h=50 |
-| Font | Font 3 (24pt) |
+| Size | w=800, h=80 |
+| Font | Font 2 (20pt) |
 | bco | 65535 (transparent) |
-| pco | 2016 (green - changes dynamically) |
+| pco | 2016 (green - changes to orange/red in alert states) |
 | pco2 | 65535 (transparent) |
 | dir | 0 (left-to-right) |
-| dis | 1 (scrolling enabled) |
-| tim | 50 (scroll speed) |
-| xcen | 1 (horizontally centered) |
+| dis | 1 (scrolling enabled when in alert mode) |
+| tim | 50 (scroll speed for alerts) |
+| xcen | 0 (left aligned in normal mode, centered in alert mode) |
 | ycen | 1 (vertically centered) |
 
-**Initial Text**: `✓ ALL SYSTEMS NORMAL`
+**Normal State Text**: `12:34  Jan 28                         Inside: 21°C  Outside: 5°C`
+**Caution State Text**: `⚡ MASTER CAUTION: [caution messages]`
+**Warning State Text**: `⚠️ MASTER WARNING: [warning messages]`
+
+**Implementation Notes:**
+- Normal state: Left side shows time & date, right side shows inside/outside temperatures
+- Alert state: Full-width scrolling text with warning/caution messages
+- Text alignment changes based on state (left-aligned for normal, centered for alerts)
 
 ---
 
@@ -153,7 +160,7 @@ Each button follows this template:
 | Property | Value |
 |----------|-------|
 | Type | Button |
-| Size | w=150, h=80 |
+| Size | w=100, h=80 |
 | Font | Font 2 (20pt) |
 | bco | 65535 (transparent) |
 | pco | 65535 (white - default) |
@@ -163,11 +170,38 @@ Each button follows this template:
 
 | Button | Name | Position | Text | Touch Event |
 |--------|------|----------|------|-------------|
-| Electric | `btn_electric` | x=0, y=60 | "Electric" | See below |
-| Water | `btn_water` | x=0, y=150 | "Water" | See below |
+| Electric | `btn_electric` | x=0, y=80 | "Electric" | See below |
+| Tanks | `btn_tanks` | x=0, y=160 | "Tanks" | See below |
 | Climate | `btn_climate` | x=0, y=240 | "Climate" | See below |
-| Status | `btn_status` | x=0, y=330 | "Status" | See below |
-| Power | `btn_power` | x=0, y=420 | "Power" | See below |
+| Status | `btn_status` | x=0, y=320 | "Status" | See below |
+| Power | `btn_power` | x=0, y=400 | "Power" | See below |
+
+**3. Page Indicators (displayed on active button only)**
+
+| Property | Value |
+|----------|-------|
+| Type | Text |
+| Size | w=100, h=30 |
+| Font | Font 1 (16pt) |
+| bco | 65535 (transparent) |
+| pco | 2016 (green - matches active button) |
+| xcen | 1 (centered) |
+| ycen | 1 (centered) |
+
+**Page Indicator Positions (below section name on button):**
+
+| Indicator | Name | Position | Text |
+|-----------|------|----------|------|
+| Electric | `txt_electric_page` | x=0, y=105 | "1/2" or "2/2" |
+| Tanks | `txt_tanks_page` | x=0, y=185 | "1/2" or "2/2" |
+| Climate | `txt_climate_page` | x=0, y=265 | "1/2" or "2/2" |
+| Status | `txt_status_page` | x=0, y=345 | "1/2" or "2/2" |
+| Power | `txt_power_page` | x=0, y=425 | "1/2" or "2/2" |
+
+**Implementation Note:**
+- Page indicators are only visible when that section is active
+- Hide all page indicators when navigating to a different section
+- Update page indicator text when cycling through pages within a section
 
 **Touch Release Events:**
 
@@ -177,10 +211,10 @@ currentSection=1
 currentPage=0
 page Electric_1
 
-// btn_water
+// btn_tanks
 currentSection=2
 currentPage=0
-page Water_1
+page Tanks_1
 
 // btn_climate
 currentSection=3
@@ -205,10 +239,17 @@ page Power_1
 ```c
 // Reset all buttons to white
 btn_electric.pco=65535
-btn_water.pco=65535
+btn_tanks.pco=65535
 btn_climate.pco=65535
 btn_status.pco=65535
 btn_power.pco=65535
+
+// Hide all page indicators
+txt_electric_page.txt=""
+txt_tanks_page.txt=""
+txt_climate_page.txt=""
+txt_status_page.txt=""
+txt_power_page.txt=""
 
 // Reset tracking
 currentSection=0
@@ -223,59 +264,124 @@ All section pages share the same structure. I'll use Electric as the example.
 
 #### Common Components (on ALL section pages)
 
-**1. Scrolling Text** (Copy from Home)
-- Name: `txt_alert`
+**1. Status Bar** (Copy from Home)
+- Name: `txt_status_bar`
 - Same properties as Home page
+- Height: 80px
+- Displays time/date/temps in normal state, alerts in warning/caution states
 
-**2. Page Counter**
-
-| Property | Value |
-|----------|-------|
-| Type | Text |
-| Name | `txt_page_counter` |
-| Position | x=700, y=10 |
-| Size | w=80, h=30 |
-| Font | Font 1 (16pt) |
-| bco | 65535 (transparent) |
-| pco | 65535 (white) |
-| txt | "1/2" or "2/2" |
-| xcen | 2 (right aligned) |
-| ycen | 1 (centered) |
-
-**3. Menu Buttons** (Copy from Home)
-- All 5 buttons: `btn_electric`, `btn_water`, `btn_climate`, `btn_status`, `btn_power`
+**2. Menu Buttons** (Copy from Home)
+- All 5 buttons: `btn_electric`, `btn_tanks`, `btn_climate`, `btn_status`, `btn_power`
+- Width: 100px, Height: 80px each
 - Same positions and properties
+
+**3. Page Indicators** (Copy from Home)
+- All 5 indicators: `txt_electric_page`, `txt_tanks_page`, `txt_climate_page`, `txt_status_page`, `txt_power_page`
+- Only visible on active section's button
+- Positioned below section name on button
 
 **Menu Button Touch Events (Generic Pattern):**
 
 ```c
-// btn_electric - Navigate within Electric section
-currentPage++
-if(currentPage>=electricPages)
+// btn_electric - Navigate within Electric section if already active, or jump to it
+if(currentSection==1)
 {
+  currentPage++
+  if(currentPage>=electricPages)
+  {
+    currentPage=0
+  }
+  if(currentPage==0)
+  {
+    page Electric_1
+  }else{
+    page Electric_2
+  }
+}else{
+  currentSection=1
   currentPage=0
+  page Electric_1
 }
-page Electric_2  // Or back to Electric_1
 
-// btn_water - Jump to Water section
-currentSection=2
-currentPage=0
-page Water_1
+// btn_tanks - Jump to Tanks section or cycle through Tanks pages
+if(currentSection==2)
+{
+  currentPage++
+  if(currentPage>=tanksPages)
+  {
+    currentPage=0
+  }
+  if(currentPage==0)
+  {
+    page Tanks_1
+  }else{
+    page Tanks_2
+  }
+}else{
+  currentSection=2
+  currentPage=0
+  page Tanks_1
+}
 
-// btn_climate - Jump to Climate section
-currentSection=3
-currentPage=0
-page Climate_1
+// btn_climate - Jump to Climate section or cycle through Climate pages
+if(currentSection==3)
+{
+  currentPage++
+  if(currentPage>=climatePages)
+  {
+    currentPage=0
+  }
+  if(currentPage==0)
+  {
+    page Climate_1
+  }else{
+    page Climate_2
+  }
+}else{
+  currentSection=3
+  currentPage=0
+  page Climate_1
+}
 
-// btn_status - Jump to Status section
-currentSection=4
-currentPage=0
-page Status_1
+// btn_status - Jump to Status section or cycle through Status pages
+if(currentSection==4)
+{
+  currentPage++
+  if(currentPage>=statusPages)
+  {
+    currentPage=0
+  }
+  if(currentPage==0)
+  {
+    page Status_1
+  }else{
+    page Status_2
+  }
+}else{
+  currentSection=4
+  currentPage=0
+  page Status_1
+}
 
-// btn_power - Jump to Power section
-currentSection=5
-currentPage=0
-page Power_1
+// btn_power - Jump to Power section or cycle through Power pages
+if(currentSection==5)
+{
+  currentPage++
+  if(currentPage>=powerPages)
+  {
+    currentPage=0
+  }
+  if(currentPage==0)
+  {
+    page Power_1
+  }else{
+    page Power_2
+  }
+}else{
+  currentSection=5
+  currentPage=0
+  page Power_1
+}
 ```
 
 **4. Next Page Button** (Optional, on first page of each section)
@@ -330,14 +436,44 @@ sich_4:  x=170, y=120, w=180, h=40
 ...
 ```
 
-**Status_2 Components (Tanks):**
+**Tanks Section (Pages 3-4) - Detailed Layout:**
 
-| Name | Type | Purpose |
-|------|------|---------|
-| `tank_fresh` | Text | Fresh water level |
-| `tank_gray` | Text | Gray water level |
-| `tank_black` | Text | Black water level |
-| `tank_lpg` | Text | LPG gas level |
+The Tanks section provides comprehensive monitoring of all fluid levels in the motorhome.
+
+**Page 3: Tanks_1 - Complete Fluid Overview**
+
+This page displays all tank and fluid levels on a single overview page with quick pump control access.
+
+| Component | Type | Position | Purpose | ESPHome Update |
+|-----------|------|----------|---------|----------------|
+| `tank_fresh` | Text/Gauge | x=120, y=100 | Fresh water tank level | ✅ |
+| `tank_waste` | Text/Gauge | x=420, y=100 | Waste water tank level | ✅ |
+| `tank_diesel` | Text/Gauge | x=120, y=200 | Diesel tank level | ✅ |
+| `tank_adblue` | Text/Gauge | x=420, y=200 | AdBlue tank level | ✅ |
+| `tank_gas1` | Text/Gauge | x=120, y=300 | Gas bottle 1 level | ✅ |
+| `tank_gas2` | Text/Gauge | x=420, y=300 | Gas bottle 2 level | ✅ |
+| `btn_pump` | Button | x=300, y=380 | Water pump ON/OFF switch | ✅ (bidirectional) |
+
+**Design Philosophy:**
+- All critical fluid levels visible at a glance
+- Water pump switch prominently placed for quick access
+- Grid layout (2 columns × 3 rows) for organized presentation
+- Color-coded levels (Green=OK, Orange=Low, Red=Critical)
+
+**Page 4: Tanks_2 - External Fill Display**
+
+This page is optimized for viewing through the outside window while filling fresh water from external connections.
+
+| Component | Type | Position | Purpose | ESPHome Update |
+|-----------|------|----------|---------|----------------|
+| `tank_fresh_large` | Text/Gauge | x=200, y=100 | Extra-large fresh water level display | ✅ |
+| `txt_fresh_percent` | Text | x=350, y=250 | Large percentage display (e.g., "78%") | ✅ |
+
+**Design Philosophy:**
+- Maximized font size for visibility from outside
+- High contrast colors
+- Minimal UI elements (focus on fresh water only)
+- Gauge + percentage for clear indication
 
 ---
 
@@ -346,15 +482,21 @@ sich_4:  x=170, y=120, w=180, h=40
 **For First Page (e.g., Electric_1):**
 
 ```c
-// Highlight active button (Green)
+// Highlight active button (Green text, no underline)
 btn_electric.pco=2016  // Green = Active
-btn_water.pco=65535    // White = Inactive
+btn_tanks.pco=65535    // White = Inactive
 btn_climate.pco=65535
 btn_status.pco=65535
 btn_power.pco=65535
 
-// Update page counter
-txt_page_counter.txt="1/2"
+// Show page indicator only for active section
+txt_electric_page.txt="1/2"
+txt_electric_page.pco=2016
+// Hide other page indicators
+txt_tanks_page.txt=""
+txt_climate_page.txt=""
+txt_status_page.txt=""
+txt_power_page.txt=""
 
 // Update tracking
 currentSection=1
@@ -366,13 +508,19 @@ currentPage=0
 ```c
 // Same button highlighting
 btn_electric.pco=2016
-btn_water.pco=65535
+btn_tanks.pco=65535
 btn_climate.pco=65535
 btn_status.pco=65535
 btn_power.pco=65535
 
-// Update page counter
-txt_page_counter.txt="2/2"
+// Update page indicator for active section
+txt_electric_page.txt="2/2"
+txt_electric_page.pco=2016
+// Hide other page indicators
+txt_tanks_page.txt=""
+txt_climate_page.txt=""
+txt_status_page.txt=""
+txt_power_page.txt=""
 
 // Update tracking
 currentSection=1
@@ -684,13 +832,15 @@ Project_WORKING.HMI (always keep working version)
 
 - [ ] All pages created (0-10)
 - [ ] All buttons lead to correct pages
-- [ ] Page counters show correct values (1/2, 2/2)
+- [ ] Page indicators show correct values (1/2, 2/2) on active button only
+- [ ] Page indicators hidden when switching to different section
 - [ ] Transparency works (no backgrounds visible)
-- [ ] Scrolling text scrolls for long messages
-- [ ] Navigation between sections works
-- [ ] Navigation within sections works
-- [ ] Page Preinit events highlight correct buttons
-- [ ] Touch areas respond correctly
+- [ ] Status bar displays time/date/temps in normal mode
+- [ ] Status bar switches to scrolling alerts in warning/caution mode
+- [ ] Navigation between sections works (via button press)
+- [ ] Navigation within sections works (via same button press when already active)
+- [ ] Page Preinit events highlight correct buttons (green text, no underline)
+- [ ] Touch areas respond correctly (100px wide buttons)
 - [ ] UART test: Send `page 0` via serial - display goes to Home
 
 ---
