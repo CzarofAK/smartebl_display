@@ -54,14 +54,14 @@ Visual representation of all display pages (7" - 800x480px).
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
-│  12:34  Jan 28                         Inside: 21°C  Outside: 5°C  │
+│  12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C  │
 │                                                                     │
 ├──────────┬──────────────────────────────────────────────────────────┤
 │          │                                                          │
 │ Electric │                                                          │
 │          │                                                          │
 │          │              MAIN MENU                                   │
-│  Tanks   │                                                          │
+│  Levels   │                                                          │
 │          │         SmartEBL Display System                          │
 │          │                                                          │
 │ Climate  │      Select a section from the menu                      │
@@ -89,14 +89,14 @@ Visual representation of all display pages (7" - 800x480px).
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
-│  12:34  Jan 28                         Inside: 21°C  Outside: 5°C  │
+│  12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C  │
 │                                                                     │
 ├──────────┬──────────────────────────────────────────────────────────┤
 │          │                                                          │
 │ Electric │   BATTERY STATUS                                         │
 │   1/2    │                                                          │
 │          │   Voltage:     12.8V                                     │
-│  Tanks   │   Current:      5.2A                                     │
+│  Levels   │   Current:      5.2A                                     │
 │          │   SOC:          78%  🟢                                  │
 │ Climate  │                                                          │
 │          │   SOLAR                                                  │
@@ -129,8 +129,8 @@ Visual representation of all display pages (7" - 800x480px).
 │          │                                                          │
 │ Electric │   FUSES                                                  │
 │          │                                                          │
-│  Tanks   │   🔴 Fuse.1 Main      🟢 Fuse.2 Lights                  │
-│          │   🟢 Fuse.3 Tanks     🟢 Fuse.4 Heater                  │
+│  Levels   │   🔴 Fuse.1 Main      🟢 Fuse.2 Lights                  │
+│          │   🟢 Fuse.3 Levels     🟢 Fuse.4 Heater                  │
 │ Climate  │   🔴 Fuse.5 12V Aux   🟢 Fuse.6 Fridge                  │
 │          │   🟢 Fuse.7 Pump      🟢 Fuse.8 Outlet                  │
 │  Status  │   🟢 Fuse.9 Climate   🟢 Fuse.10 USB                    │
@@ -157,7 +157,7 @@ Visual representation of all display pages (7" - 800x480px).
 #### Normal State (Green) - Shows Time, Date, and Temperatures
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  12:34  Jan 28                         Inside: 21°C  Outside: 5°C  │
+│  12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C  │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -188,10 +188,10 @@ Visual representation of all display pages (7" - 800x480px).
    (Pages 1-2)   (Pages 3-4) (5-6)  (Pages 7-8)  (Pages 9-10)
         │              │       │       │              │
         ↓              ↓       ↓       ↓              ↓
-    Electric_1     Tanks_1  Climate_1 Status_1    Power_1
+    Electric_1     Levels_1  Climate_1 Status_1    Power_1
         │              │       │       │              │
         ↓              ↓       ↓       ↓              ↓
-    Electric_2     Tanks_2  Climate_2 Status_2    Power_2
+    Electric_2     Levels_2  Climate_2 Status_2    Power_2
         │              │       │       │              │
         └──────────────┴───────┴───────┴──────────────┘
                           │
@@ -272,7 +272,7 @@ pco2=65535   // Press Color 2 = Transparent
 
 **Status Bar Examples:**
 ```
-Green:  "12:34  Jan 28                         Inside: 21°C  Outside: 5°C"
+Green:  "12:34:56 28.Jan.2025                         Inside: 21°C  Outside: 5°C"
 Orange: "⚡ MASTER CAUTION: Low Fresh Water, Battery Below 50%"
 Red:    "⚠️ MASTER WARNING: Fuse.1 Main Blown, Fuse.5 12V Aux Blown"
 ```
@@ -454,9 +454,9 @@ Status Bar:   800x80 px (top, non-interactive - displays info/alerts)
 ### Horizontal Navigation (Between Sections)
 
 ```
-Electric → Tanks → Climate → Status → Power
+Electric → Levels → Climate → Status → Power
    ↓         ↓         ↓         ↓       ↓
-Electric_1 Tanks_1  Climate_1  Status_1 Power_1
+Electric_1 Levels_1  Climate_1  Status_1 Power_1
 ```
 
 **Always via menu buttons on the left**
@@ -672,12 +672,12 @@ if(new_value\!=old_value)
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│ 12:34  Jan 28                 Inside: 21°C  Outside: 5°C│
+│ 12:34:56 28.Jan.2025                 Inside: 21°C  Outside: 5°C│
 ├──────────┬──────────────────────────────────────────────┤
 │          │                                              │
 │ Electric │  [SECTION TITLE]                             │
 │   1/2    │                                              │
-│  Tanks   │  Label1: Value1                              │
+│  Levels   │  Label1: Value1                              │
 │          │  Label2: Value2                              │
 │ Climate  │  Label3: Value3                              │
 │          │                                              │
@@ -688,7 +688,7 @@ if(new_value\!=old_value)
 └──────────┴──────────────────────────────────────────────┘
 ```
 
-**Use for**: Electric, Tanks, Climate, Power sections
+**Use for**: Electric, Levels, Climate, Power sections
 
 ---
 
@@ -701,7 +701,7 @@ if(new_value\!=old_value)
 │          │  🔴 Item.1   🟢 Item.2   🟢 Item.3          │
 │ Electric │  🟢 Item.4   🔴 Item.5   🟢 Item.6          │
 │          │  🟢 Item.7   🟢 Item.8   🟢 Item.9          │
-│  Tanks   │                                              │
+│  Levels   │                                              │
 │          │  STATUS SUMMARY                              │
 │ Climate  │  Field1: Value1  🟢                          │
 │          │  Field2: Value2  🟢                          │
