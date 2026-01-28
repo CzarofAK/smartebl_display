@@ -176,32 +176,59 @@ Each button follows this template:
 | Status | `btn_status` | x=0, y=320 | "Status" | See below |
 | Power | `btn_power` | x=0, y=400 | "Power" | See below |
 
-**3. Page Indicators (displayed on active button only)**
+**3. Section Text Labels (on buttons - FIXED POSITION)**
 
 | Property | Value |
 |----------|-------|
 | Type | Text |
 | Size | w=100, h=30 |
+| Font | Font 2 (20pt) |
+| bco | 65535 (transparent) |
+| pco | 65535 (white - 2016 green when active) |
+| xcen | 1 (centered) |
+| ycen | 0 (top aligned) |
+
+**Section Label Positions (FIXED - top of button):**
+
+| Label | Name | Position | Text |
+|-------|------|----------|------|
+| Electric | `txt_electric` | x=0, y=90 (10px from button top) | "Electric" |
+| Levels | `txt_levels` | x=0, y=170 (10px from button top) | "Levels" |
+| Climate | `txt_climate` | x=0, y=250 (10px from button top) | "Climate" |
+| Status | `txt_status` | x=0, y=330 (10px from button top) | "Status" |
+| Power | `txt_power` | x=0, y=410 (10px from button top) | "Power" |
+
+**4. Page Indicators (FIXED POSITION - always present)**
+
+| Property | Value |
+|----------|-------|
+| Type | Text |
+| Size | w=100, h=20 |
 | Font | Font 1 (16pt) |
 | bco | 65535 (transparent) |
 | pco | 2016 (green - matches active button) |
 | xcen | 1 (centered) |
-| ycen | 1 (centered) |
+| ycen | 0 (top aligned) |
 
-**Page Indicator Positions (below section name on button):**
+**Page Indicator Positions (FIXED - bottom of button):**
 
 | Indicator | Name | Position | Text |
 |-----------|------|----------|------|
-| Electric | `txt_electric_page` | x=0, y=105 | "1/2" or "2/2" |
-| Levels | `txt_tanks_page` | x=0, y=185 | "1/2" or "2/2" |
-| Climate | `txt_climate_page` | x=0, y=265 | "1/2" or "2/2" |
-| Status | `txt_status_page` | x=0, y=345 | "1/2" or "2/2" |
-| Power | `txt_power_page` | x=0, y=425 | "1/2" or "2/2" |
+| Electric | `txt_electric_page` | x=0, y=135 (55px from button top) | "1/2" or "2/2" or "" |
+| Levels | `txt_levels_page` | x=0, y=215 (55px from button top) | "1/2" or "2/2" or "" |
+| Climate | `txt_climate_page` | x=0, y=295 (55px from button top) | "1/2" or "2/2" or "" |
+| Status | `txt_status_page` | x=0, y=375 (55px from button top) | "1/2" or "2/2" or "" |
+| Power | `txt_power_page` | x=0, y=455 (55px from button top) | "1/2" or "2/2" or "" |
 
-**Implementation Note:**
-- Page indicators are only visible when that section is active
-- Hide all page indicators when navigating to a different section
-- Update page indicator text when cycling through pages within a section
+**Implementation Notes:**
+- **CRITICAL**: Section text labels and page indicators use SEPARATE text components with FIXED positions
+- Section text always stays at y+10 from button top (never moves)
+- Page indicator always stays at y+55 from button top (never moves)
+- When section is inactive: page indicator txt="" (empty string = invisible)
+- When section is active: page indicator shows "1/2", "2/2", etc.
+- This prevents text jumping when switching between pages
+- Both text components are always present (just hidden via txt="")
+- Color changes: txt_electric.pco=2016 when active, =65535 when inactive
 
 **Touch Release Events:**
 
@@ -280,42 +307,55 @@ All section pages share the same structure. I'll use Electric as the example.
 - Only visible on active section's button
 - Positioned below section name on button
 
-**Menu Button Touch Events (Generic Pattern):**
+**Menu Button Touch Events (Updated - Returns to Home from Last Page):**
 
 ```c
-// btn_electric - Navigate within Electric section if already active, or jump to it
+// btn_electric - Cycles through pages, returns to home when pressing on last page
 if(currentSection==1)
 {
   currentPage++
-  if(currentPage>=electricPages)
+  if(currentPage>=electricPages)  // Beyond last page?
   {
+    // Return to home instead of looping
+    currentSection=0
     currentPage=0
-  }
-  if(currentPage==0)
-  {
-    page Electric_1
+    page Home
   }else{
-    page Electric_2
+    // Navigate to next page within section
+    if(currentPage==0)
+    {
+      page Electric_1
+    }else if(currentPage==1)
+    {
+      page Electric_2
+    }
   }
 }else{
+  // Jump to first page of section
   currentSection=1
   currentPage=0
   page Electric_1
 }
 
-// btn_tanks - Jump to Levels section or cycle through Levels pages
+// btn_levels - Jump to Levels section or cycle through Levels pages
 if(currentSection==2)
 {
   currentPage++
-  if(currentPage>=tanksPages)
+  if(currentPage>=levelsPages)  // Beyond last page?
   {
+    // Return to home
+    currentSection=0
     currentPage=0
-  }
-  if(currentPage==0)
-  {
-    page Levels_1
+    page Home
   }else{
-    page Levels_2
+    // Navigate to next page
+    if(currentPage==0)
+    {
+      page Levels_1
+    }else if(currentPage==1)
+    {
+      page Levels_2
+    }
   }
 }else{
   currentSection=2
@@ -327,15 +367,20 @@ if(currentSection==2)
 if(currentSection==3)
 {
   currentPage++
-  if(currentPage>=climatePages)
+  if(currentPage>=climatePages)  // Beyond last page?
   {
+    // Return to home
+    currentSection=0
     currentPage=0
-  }
-  if(currentPage==0)
-  {
-    page Climate_1
+    page Home
   }else{
-    page Climate_2
+    if(currentPage==0)
+    {
+      page Climate_1
+    }else if(currentPage==1)
+    {
+      page Climate_2
+    }
   }
 }else{
   currentSection=3
@@ -347,15 +392,20 @@ if(currentSection==3)
 if(currentSection==4)
 {
   currentPage++
-  if(currentPage>=statusPages)
+  if(currentPage>=statusPages)  // Beyond last page?
   {
+    // Return to home
+    currentSection=0
     currentPage=0
-  }
-  if(currentPage==0)
-  {
-    page Status_1
+    page Home
   }else{
-    page Status_2
+    if(currentPage==0)
+    {
+      page Status_1
+    }else if(currentPage==1)
+    {
+      page Status_2
+    }
   }
 }else{
   currentSection=4
@@ -367,15 +417,20 @@ if(currentSection==4)
 if(currentSection==5)
 {
   currentPage++
-  if(currentPage>=powerPages)
+  if(currentPage>=powerPages)  // Beyond last page?
   {
+    // Return to home
+    currentSection=0
     currentPage=0
-  }
-  if(currentPage==0)
-  {
-    page Power_1
+    page Home
   }else{
-    page Power_2
+    if(currentPage==0)
+    {
+      page Power_1
+    }else if(currentPage==1)
+    {
+      page Power_2
+    }
   }
 }else{
   currentSection=5
@@ -383,6 +438,11 @@ if(currentSection==5)
   page Power_1
 }
 ```
+
+**Key Changes:**
+- When pressing a section button while on the last page of that section, the display now returns to Home instead of looping back to page 1
+- This provides a more intuitive navigation: Section → Page 1 → Page 2 → Home
+- Still allows direct jumping between sections (e.g., from Electric to Levels without going through Home)
 
 **4. Next Page Button** (Optional, on first page of each section)
 
@@ -407,17 +467,58 @@ page Electric_2  // Go to second page
 
 #### Page-Specific Components
 
-**Electric_1 Components:**
+**Electric_1 Components (Victron-Style Power Flow Overview):**
 
-| Name | Type | Purpose | Updated by ESPHome |
-|------|------|---------|-------------------|
-| `bat_volt` | Text | Battery Voltage | ✅ |
-| `bat_current` | Text | Battery Current | ✅ |
-| `bat_soc` | Text | State of Charge | ✅ (with color) |
-| `solar_power` | Text | Solar Power | ✅ |
-| `shore_status` | Text | Shore Connected/Disconnected | ✅ |
-| `alt_power` | Text | Alternator Power | ✅ |
-| `alt_status` | Text | Alternator Status | ✅ |
+This page displays a complete power flow diagram inspired by Victron Venus OS.
+
+**Power Source Boxes (Top Row):**
+
+| Component | Type | Position | Size | Purpose | ESPHome Update |
+|-----------|------|----------|------|---------|----------------|
+| `box_shore` | Rectangle | x=120, y=100 | w=150, h=100 | Shore power box background | Static |
+| `txt_shore_label` | Text | x=130, y=110 | - | "⚡ Shore" label | Static |
+| `txt_shore_power` | Text | x=130, y=150 | - | Shore power (e.g., "91W") | ✅ |
+| `box_inverter` | Rectangle | x=330, y=100 | w=220, h=120 | Inverter/Charger box | Static |
+| `txt_inverter_label` | Text | x=350, y=110 | - | "🔌 Inverter / Charger" | Static |
+| `txt_inverter_status` | Text | x=350, y=150 | - | Status (e.g., "External control") | ✅ |
+| `box_ac_loads` | Rectangle | x=600, y=100 | w=150, h=100 | AC Loads box | Static |
+| `txt_ac_label` | Text | x=610, y=110 | - | "⏻ AC Loads" | Static |
+| `txt_ac_power` | Text | x=610, y=150 | - | AC consumption (e.g., "11W") | ✅ |
+
+**Power Sinks/Storage (Bottom Row):**
+
+| Component | Type | Position | Size | Purpose | ESPHome Update |
+|-----------|------|----------|------|---------|----------------|
+| `box_solar` | Rectangle | x=120, y=260 | w=150, h=120 | Solar yield box | Static |
+| `txt_solar_label` | Text | x=130, y=270 | - | "☀ Solar yield" | Static |
+| `txt_solar_power` | Text | x=130, y=320 | - | Solar power (e.g., "0W") | ✅ |
+| `box_battery` | Rectangle | x=330, y=240 | w=220, h=160 | Battery box (LARGE, emphasized) | Static, Blue bg |
+| `txt_battery_label` | Text | x=350, y=250 | - | "🔋 Battery" | Static |
+| `txt_battery_temp` | Text | x=500, y=250 | - | Temperature (e.g., "3°C") | ✅ |
+| `txt_battery_soc` | Text | x=380, y=290 | Font 4 | SOC percentage (e.g., "100%") | ✅ (with color) |
+| `txt_battery_status` | Text | x=380, y=340 | - | Status (e.g., "Charging") | ✅ |
+| `txt_battery_volt` | Text | x=350, y=370 | - | Voltage (e.g., "14.10V") | ✅ |
+| `txt_battery_current` | Text | x=420, y=370 | - | Current (e.g., "0.4A") | ✅ |
+| `txt_battery_power` | Text | x=490, y=370 | - | Power (e.g., "6W") | ✅ |
+| `box_dc_loads` | Rectangle | x=600, y=260 | w=150, h=120 | DC Loads box | Static |
+| `txt_dc_label` | Text | x=610, y=270 | - | "⚡ DC Loads" | Static |
+| `txt_dc_power` | Text | x=610, y=320 | - | DC consumption (e.g., "65W") | ✅ |
+
+**Flow Lines:**
+
+| Component | Type | Purpose |
+|-----------|------|---------|
+| `line_shore_inv` | Line | Shore → Inverter flow indicator |
+| `line_inv_ac` | Line | Inverter → AC Loads flow indicator |
+| `line_solar_bat` | Line | Solar → Battery flow indicator |
+| `line_inv_bat` | Line | Inverter ↔ Battery flow (bidirectional) |
+| `line_bat_dc` | Line | Battery → DC Loads flow indicator |
+
+**Design Notes:**
+- Battery box is larger and blue-highlighted (most important component)
+- Use Nextion line draw commands or image overlays for flow lines
+- Update flow line colors based on power direction (e.g., blue=charging, yellow=discharging)
+- All power values updated in real-time from ESPHome
 
 **Status_1 Components (Fuses):**
 
@@ -440,25 +541,73 @@ sich_4:  x=170, y=120, w=180, h=40
 
 The Levels section provides comprehensive monitoring of all fluid levels in the motorhome.
 
-**Page 3: Levels_1 - Complete Fluid Overview**
+**Page 3: Levels_1 - Victron-Style Vertical Tank Display**
 
-This page displays all tank and fluid levels on a single overview page with quick pump control access.
+This page displays all tank levels using Victron Venus OS inspired vertical bars.
 
-| Component | Type | Position | Purpose | ESPHome Update |
-|-----------|------|----------|---------|----------------|
-| `tank_fresh` | Text/Gauge | x=120, y=100 | Fresh water tank level | ✅ |
-| `tank_waste` | Text/Gauge | x=420, y=100 | Waste water tank level | ✅ |
-| `tank_diesel` | Text/Gauge | x=120, y=200 | Diesel tank level | ✅ |
-| `tank_adblue` | Text/Gauge | x=420, y=200 | AdBlue tank level | ✅ |
-| `tank_gas1` | Text/Gauge | x=120, y=300 | Gas bottle 1 level | ✅ |
-| `tank_gas2` | Text/Gauge | x=420, y=300 | Gas bottle 2 level | ✅ |
-| `btn_pump` | Button | x=300, y=380 | Water pump ON/OFF switch | ✅ (bidirectional) |
+**Tank Column Structure (5 columns):**
+
+Each tank column consists of:
+- Header rectangle (colored) with icon and label
+- Large vertical bar with 4-5 segments showing fill level
+- Large percentage text at bottom
+- Small actual/max value text
+- Warning icon when critical
+
+| Component | Type | Position | Size | Purpose | ESPHome Update |
+|-----------|------|----------|------|---------|----------------|
+| **Fresh Water Column** |||||
+| `fresh_header` | Rectangle | x=120, y=100 | w=100, h=40 | Cyan header | Static |
+| `fresh_icon` | Text/Image | x=155, y=110 | - | 💧 water drop icon | Static |
+| `fresh_label` | Text | x=140, y=115 | - | "Fresh" | Static |
+| `fresh_bar_bg` | Rectangle | x=135, y=150 | w=70, h=200 | Tank bar background (dark) | Static |
+| `fresh_bar_fill` | Progress/Gauge | x=137, y=152 | w=66, h=196 | Filled portion (red if low, blue if OK) | ✅ |
+| `fresh_warning` | Text | x=160, y=200 | - | "⚠" warning triangle | ✅ (visible if <20%) |
+| `fresh_percent` | Text | x=150, y=360 | Font 4 | "0%" (large) | ✅ |
+| `fresh_values` | Text | x=140, y=400 | Font 1 | "0/120ℓ" (small) | ✅ |
+| **Waste Water Column** |||||
+| `waste_header` | Rectangle | x=240, y=100 | w=100, h=40 | Cyan header | Static |
+| `waste_icon` | Text/Image | x=275, y=110 | - | 💧 water drop icon | Static |
+| `waste_label` | Text | x=260, y=115 | - | "Waste" | Static |
+| `waste_bar_bg` | Rectangle | x=255, y=150 | w=70, h=200 | Tank bar background | Static |
+| `waste_bar_fill` | Progress/Gauge | x=257, y=152 | w=66, h=196 | Filled portion (red if full, blue if OK) | ✅ |
+| `waste_percent` | Text | x=270, y=360 | Font 4 | "9%" (large) | ✅ |
+| `waste_values` | Text | x=260, y=400 | Font 1 | "8/80ℓ" (small) | ✅ |
+| **Diesel Column** |||||
+| `diesel_header` | Rectangle | x=360, y=100 | w=100, h=40 | Yellow header | Static |
+| `diesel_icon` | Text/Image | x=390, y=110 | - | ⛽ fuel pump icon | Static |
+| `diesel_label` | Text | x=370, y=115 | - | "FRAM-Diesel" | Static |
+| `diesel_bar_bg` | Rectangle | x=375, y=150 | w=70, h=200 | Tank bar background | Static |
+| `diesel_bar_fill` | Progress/Gauge | x=377, y=152 | w=66, h=196 | Filled portion (blue) | ✅ |
+| `diesel_percent` | Text | x=390, y=360 | Font 4 | "73%" (large) | ✅ |
+| `diesel_values` | Text | x=375, y=400 | Font 1 | "67/92ℓ" (small) | ✅ |
+| **Gas 1 Column** |||||
+| `gas1_header` | Rectangle | x=480, y=100 | w=100, h=40 | Purple header | Static |
+| `gas1_icon` | Text/Image | x=515, y=110 | - | 🔥 flame icon | Static |
+| `gas1_label` | Text | x=505, y=115 | - | "Gas 1" | Static |
+| `gas1_bar_bg` | Rectangle | x=495, y=150 | w=70, h=200 | Tank bar background | Static |
+| `gas1_bar_fill` | Progress/Gauge | x=497, y=152 | w=66, h=196 | Filled portion (blue) | ✅ |
+| `gas1_percent` | Text | x=510, y=360 | Font 4 | "100%" (large) | ✅ |
+| `gas1_values` | Text | x=495, y=400 | Font 1 | "20/20ℓ" (small) | ✅ |
+| **Gas 2 Column** |||||
+| `gas2_header` | Rectangle | x=600, y=100 | w=100, h=40 | Purple header | Static |
+| `gas2_icon` | Text/Image | x=635, y=110 | - | 🔥 flame icon | Static |
+| `gas2_label` | Text | x=625, y=115 | - | "Gas 2" | Static |
+| `gas2_bar_bg` | Rectangle | x=615, y=150 | w=70, h=200 | Tank bar background | Static |
+| `gas2_bar_fill` | Progress/Gauge | x=617, y=152 | w=66, h=196 | Filled portion (blue) | ✅ |
+| `gas2_percent` | Text | x=630, y=360 | Font 4 | "100%" (large) | ✅ |
+| `gas2_values` | Text | x=615, y=400 | Font 1 | "20/20ℓ" (small) | ✅ |
+| **Control Button** |||||
+| `btn_pump` | Button | x=720, y=380 | w=60, h=40 | Water pump ON/OFF | ✅ (bidirectional) |
 
 **Design Philosophy:**
-- All critical fluid levels visible at a glance
-- Water pump switch prominently placed for quick access
-- Grid layout (2 columns × 3 rows) for organized presentation
-- Color-coded levels (Green=OK, Orange=Low, Red=Critical)
+- Victron Venus OS inspired vertical tank bars
+- 5 columns for all fluid types at a glance
+- Segmented bars (4-5 horizontal lines for visual segments)
+- Color-coded headers (Cyan for water, Yellow for diesel, Purple for gas)
+- Warning triangles appear automatically when levels critical
+- Large percentage display for easy reading
+- Water pump control button accessible on same page
 
 **Page 4: Levels_2 - External Fill Display**
 
@@ -474,6 +623,63 @@ This page is optimized for viewing through the outside window while filling fres
 - High contrast colors
 - Minimal UI elements (focus on fresh water only)
 - Gauge + percentage for clear indication
+
+---
+
+**Power Section (Pages 9-10):**
+
+**Page 9: Power_1 - SmartEBL Relay Controls**
+
+This page provides direct control of all SmartEBL relay switches.
+
+| Component | Type | Position | Size | Purpose | ESPHome Update |
+|-----------|------|----------|------|---------|----------------|
+| **Light Relay Button** |||||
+| `btn_relay_light` | Button/Dual-state | x=150, y=120 | w=120, h=100 | Light relay control | ✅ (bidirectional) |
+| `icon_light` | Text/Image | x=195, y=135 | - | 💡 light bulb icon | Static |
+| `label_light` | Text | x=185, y=170 | - | "Light" | Static |
+| `status_light` | Text | x=185, y=195 | - | "ON" or "OFF" | ✅ (color coded) |
+| **User Relay Button** |||||
+| `btn_relay_user` | Button/Dual-state | x=290, y=120 | w=120, h=100 | User-configurable relay | ✅ (bidirectional) |
+| `icon_user` | Text/Image | x=335, y=135 | - | 👤 user icon | Static |
+| `label_user` | Text | x=325, y=170 | - | "User" | Static |
+| `status_user` | Text | x=325, y=195 | - | "ON" or "OFF" | ✅ (color coded) |
+| **Aux Relay Button** |||||
+| `btn_relay_aux` | Button/Dual-state | x=430, y=120 | w=120, h=100 | Auxiliary power relay | ✅ (bidirectional) |
+| `icon_aux` | Text/Image | x=475, y=135 | - | ⚡ lightning icon | Static |
+| `label_aux` | Text | x=465, y=170 | - | "Aux" | Static |
+| `status_aux` | Text | x=465, y=195 | - | "ON" or "OFF" | ✅ (color coded) |
+| **Pump Relay Button** |||||
+| `btn_relay_pump` | Button/Dual-state | x=220, y=250 | w=120, h=100 | Water pump relay | ✅ (bidirectional) |
+| `icon_pump` | Text/Image | x=265, y=265 | - | 💧 water drop icon | Static |
+| `label_pump` | Text | x=255, y=300 | - | "Pump" | Static |
+| `status_pump` | Text | x=255, y=325 | - | "ON" or "OFF" | ✅ (color coded) |
+| **Fridge Relay Button** |||||
+| `btn_relay_fridge` | Button/Dual-state | x=360, y=250 | w=120, h=100 | Fridge power relay | ✅ (bidirectional) |
+| `icon_fridge` | Text/Image | x=405, y=265 | - | ❄️ snowflake icon | Static |
+| `label_fridge` | Text | x=390, y=300 | - | "Fridge" | Static |
+| `status_fridge` | Text | x=390, y=325 | - | "ON" or "OFF" | ✅ (color coded) |
+
+**Button States:**
+- **ON**: Green background (2016), white text
+- **OFF**: Red background (63488) or dark gray, white text
+
+**Touch Events:**
+- Press button to toggle relay state
+- ESPHome receives command and updates relay
+- ESPHome sends current state back to display
+- Display updates button appearance based on actual relay state
+
+**Design Philosophy:**
+- Large touch-friendly buttons (120x100px)
+- Clear visual feedback (color coded)
+- Icon + Label + Status for each relay
+- Bidirectional control (can be toggled from HA or display)
+- Real-time state synchronization
+
+**Page 10: Power_2 - Energy Monitoring**
+
+Additional power monitoring page (battery history, energy consumption charts, etc.)
 
 ---
 
