@@ -143,47 +143,39 @@ sensor:
 # ============================================
 # PUMPS & CONTROLS
 # ============================================
-
-binary_sensor:
-  # Nextion Pump Button Touch Detection
-  # IMPORTANT: In Nextion Editor, for btn_pump:
-  #   1. Check "Send Component ID" checkbox in Event panel
-  #   2. Add to Touch Press Event: click btn_pump,0
-  #      (This prevents auto-toggle - ESPHome controls the state)
-  - platform: nextion
-    page_id: 4           # ← CUSTOMIZE: Your Levels_2 page ID
-    component_id: 23     # ← CUSTOMIZE: Your btn_pump component ID
-    name: "Nextion Pump Button"
-    internal: true       # Hide from Home Assistant
-    on_press:
-      - switch.toggle: water_pump_switch
+# Uses ESPHome Nextion Switch component for bidirectional sync.
+# See: https://esphome.io/components/switch/nextion/
+#
+# The Nextion Switch handles BOTH directions automatically:
+#   - Nextion button press → ESPHome state change
+#   - Home Assistant change → Nextion button visual update
 
 switch:
-  # Water Pump Control (Template Switch with Nextion sync)
-  # For SmartEBL users: Replace with your relay control logic
-  - platform: template
-    name: "Water Pump"
+  # Water Pump - Nextion dual-state button with bidirectional sync
+  # The nextion switch syncs directly with the Nextion component.
+  # No lambda updates needed - it handles everything automatically!
+  - platform: nextion
     id: water_pump_switch
+    name: "Water Pump"
     icon: mdi:water-pump
-    optimistic: true
-    turn_on_action:
-      # For SmartEBL: - switch.turn_on: relay_pump_on_coil
+    component_name: Levels_2.btn_pump  # Page prefix for global vscope
+    update_interval: 100ms  # Fast sync for responsive UI
+    on_turn_on:
+      # For SmartEBL: Control bistable relay
+      # - switch.turn_on: relay_pump_on_coil
+      # For Home Assistant integration:
       - homeassistant.service:
           service: switch.turn_on
           data:
             entity_id: switch.water_pump  # ← CUSTOMIZE
-      - delay: 50ms
-      - lambda: |-
-          id(nextion_display).set_component_value("Levels_2.btn_pump", 1);
-    turn_off_action:
-      # For SmartEBL: - switch.turn_on: relay_pump_off_coil
+    on_turn_off:
+      # For SmartEBL: Control bistable relay
+      # - switch.turn_on: relay_pump_off_coil
+      # For Home Assistant integration:
       - homeassistant.service:
           service: switch.turn_off
           data:
             entity_id: switch.water_pump  # ← CUSTOMIZE
-      - delay: 50ms
-      - lambda: |-
-          id(nextion_display).set_component_value("Levels_2.btn_pump", 0);
 
 # ============================================
 # NEXTION COMPONENTS (Reference)
@@ -203,25 +195,22 @@ switch:
 # - Dual-State Button "btn_pump" → Water Pump ON/OFF
 #
 # ============================================
-# PUMP BUTTON CONFIGURATION (CRITICAL!)
+# PUMP BUTTON CONFIGURATION (Nextion Editor)
 # ============================================
 #
-# For btn_pump to work reliably with ESPHome:
+# For btn_pump to work with the Nextion Switch component:
 #
 # 1. In Nextion Editor, select btn_pump
-# 2. In Event panel (right side), check "Send Component ID"
-# 3. In Touch Press Event tab, add this code:
+# 2. Set vscope = global (Attribute panel)
+#    This makes the button accessible from any page
+# 3. Check "Send Component ID" (Event panel) - optional but recommended
+# 4. Leave Touch Press Event EMPTY (no custom code needed!)
 #
-#    click btn_pump,0
+# The dual-state button's natural toggle behavior works WITH
+# the ESPHome Nextion Switch component. No workarounds needed!
 #
-#    This prevents the button from auto-toggling its state.
-#    ESPHome will control the visual state via set_component_value.
-#
-# 4. Find your component ID:
-#    - Look at btn_pump's .id attribute in Nextion Editor
-#    - OR check ESPHome DEBUG logs when pressing button
-#
-# 5. Update page_id and component_id in ESPHome config above
+# NOTE: The component_name uses page prefix: Levels_2.btn_pump
+#       Make sure your page objname matches (not page4, but Levels_2)
 
 # ============================================
 # CUSTOMIZATION NOTES
