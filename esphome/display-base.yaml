@@ -2,16 +2,30 @@
 # SmartEBL Display - Base Configuration
 # ============================================
 # Base ESP32 + Nextion UART Setup
-# 
+#
 # Import in your main.yaml:
 #   packages:
 #     display_base: github://CzarofAK/smartebl_display/esphome/display-base.yaml@main
+#
+# UART TROUBLESHOOTING:
+# - Nextion displays use TTL-level UART (0-5V), NOT RS-232
+# - Do NOT use RS-232 level shifters (MAX232, TRS3221) - they're for ±12V signals
+# - ESP32 can connect directly to Nextion without level shifters:
+#     ESP32 TX (GPIO17) → Nextion RX (Yellow wire)
+#     ESP32 RX (GPIO16) → Nextion TX (Blue wire)
+#     ESP32 GND → Nextion GND (Black wire)
+# - Nextion default baud: 9600 (change in Nextion Editor: bauds=115200 in Program.s)
+# - If display shows nothing: Check baud rate match, TX/RX swap, GND connection
+# - Avoid GPIO12 (strapping pin - can cause boot issues)
 
 uart:
   id: nextion_uart
-  tx_pin: GPIO17  # ← Customize
+  tx_pin: GPIO17  # ← Customize (avoid GPIO12 - strapping pin!)
   rx_pin: GPIO16  # ← Customize
-  baud_rate: 115200
+  baud_rate: 115200  # ← Must match Nextion baud (set in Nextion Editor)
+  stop_bits: 1  # Nextion uses 1 stop bit (default)
+  data_bits: 8  # 8 data bits
+  parity: NONE  # No parity
 
 display:
   - platform: nextion

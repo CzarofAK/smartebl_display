@@ -548,6 +548,89 @@ esphome logs motorhome-display.yaml
 
 ---
 
+#### ❌ Using RS-232 Level Shifters (Common Mistake!)
+
+**Symptoms**: No communication even with correct pins/baud rate
+
+**Problem**: Using RS-232 level shifters (MAX232, TRS3221, etc.) between ESP32 and Nextion.
+
+**Why it's wrong:**
+- **Nextion uses TTL-level UART** (0-5V logic signals)
+- **RS-232 uses ±12V signals** (completely different voltage levels!)
+- RS-232 chips are designed for PC serial ports, NOT for microcontroller-to-display communication
+
+```
+❌ WRONG SETUP:
+ESP32 (3.3V TTL) → TRS3221 → [±12V RS-232] → TRS3221 → Nextion (5V TTL)
+
+✅ CORRECT SETUP (Direct Connection):
+ESP32 (3.3V TTL) ──────────────────────────→ Nextion (5V TTL)
+```
+
+**Solution**: Remove the RS-232 level shifters and connect directly:
+
+```
+ESP32 GPIO17 (TX) ──→ Nextion RX (Yellow)
+ESP32 GPIO19 (RX) ←── Nextion TX (Blue)
+ESP32 GND ──────────── Nextion GND (Black)
+ESP32 5V ────────────── Nextion 5V (Red)
+```
+
+**Why direct connection works:**
+- Nextion RX is 5V tolerant (accepts 3.3V from ESP32)
+- Nextion TX outputs ~3.3V (compatible with ESP32 RX)
+- No level shifting needed!
+
+**If you need level shifting** (rare cases):
+- Use a simple bidirectional logic level converter (3.3V ↔ 5V TTL)
+- NOT an RS-232 transceiver
+
+---
+
+#### Wrong UART Stop Bits or Data Bits
+
+**Symptoms**: Garbled communication, intermittent updates
+
+**Nextion expects:**
+- Baud rate: 9600 (default) or 115200 (recommended)
+- Data bits: 8
+- Stop bits: 1
+- Parity: None
+
+**Check your ESPHome config:**
+```yaml
+uart:
+  id: nextion_uart
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 115200
+  stop_bits: 1    # ← Must be 1, NOT 2!
+  data_bits: 8
+  parity: NONE
+```
+
+**Common mistake**: Some configurations accidentally set `stop_bits: 2`, which causes communication failures.
+
+---
+
+#### Avoid Strapping Pins (GPIO12)
+
+**Symptoms**: ESP32 won't boot, boots into wrong mode, or UART unreliable
+
+**Problem**: GPIO12 is a strapping pin that affects boot mode.
+
+**Solution**: Avoid these pins for Nextion UART:
+- **GPIO12** - Strapping pin (affects flash voltage)
+- **GPIO0, GPIO2, GPIO15** - Boot mode pins
+- **GPIO1, GPIO3** - USB serial (used by logger)
+
+**Safe UART pins:**
+- GPIO16/GPIO17 (recommended - UART2)
+- GPIO4/GPIO5 (alternative)
+- GPIO18/GPIO19 (alternative)
+
+---
+
 ### Common Configuration Mistakes
 
 #### ❌ Wrong Baud Rate
