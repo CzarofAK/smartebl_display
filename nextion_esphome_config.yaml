@@ -1,0 +1,182 @@
+# ESPHome Configuration for SmartEBL Nextion Display
+# This file collects all the Nextion display integration code
+# Add this content to your main ESPHome YAML configuration
+
+# =============================================================================
+# NEXTION DISPLAY CONFIGURATION
+# =============================================================================
+
+uart:
+  tx_pin: GPIO17  # Adjust to your wiring
+  rx_pin: GPIO16  # Adjust to your wiring
+  baud_rate: 115200
+
+display:
+  - platform: nextion
+    id: nextion_display
+    update_interval: 1s
+
+    # Lambda for regular updates (runs every update_interval)
+    lambda: |-
+      // Status bar updates (time, date, temperatures)
+      it.set_component_text("txt_status_bar", id(status_text).state.c_str());
+
+      // === LEVELS PAGE UPDATES ===
+      // Freshwater tank
+      it.set_component_value("bar_fresh", id(fresh_water_level).state);
+      it.set_component_value("bar_fresh_big", id(fresh_water_level).state);
+      it.set_component_text_printf("val_fresh", "%.0f%%", id(fresh_water_level).state);
+      it.set_component_text_printf("val_fresh_big", "%.0f%%", id(fresh_water_level).state);
+
+      // Greywater tank
+      it.set_component_value("bar_grey", id(grey_water_level).state);
+      it.set_component_value("bar_grey_big", id(grey_water_level).state);
+      it.set_component_text_printf("val_grey", "%.0f%%", id(grey_water_level).state);
+      it.set_component_text_printf("val_grey_big", "%.0f%%", id(grey_water_level).state);
+
+      // Diesel tank
+      it.set_component_value("bar_diesel", id(diesel_level).state);
+      it.set_component_text_printf("val_diesel", "%.0f%%", id(diesel_level).state);
+
+      // Gas 1 tank
+      it.set_component_value("bar_gas1", id(gas1_level).state);
+      it.set_component_text_printf("val_gas1", "%.0f%%", id(gas1_level).state);
+
+      // Gas 2 tank
+      it.set_component_value("bar_gas2", id(gas2_level).state);
+      it.set_component_text_printf("val_gas2", "%.0f%%", id(gas2_level).state);
+
+      // Update pump button state to match actual relay
+      it.set_component_value("btn_pump", id(grey_water_pump).state ? 1 : 0);
+
+# =============================================================================
+# BINARY SENSORS - Nextion Touch Events
+# =============================================================================
+
+binary_sensor:
+  # Grey water pump button (Levels_2 page)
+  # Component ID: 26 (0x1A) - adjust based on your actual component ID
+  - platform: nextion
+    page_id: 4  # Levels_2 page
+    component_id: 26  # Update this with actual btn_pump component ID
+    name: "Pump Button Pressed"
+    on_press:
+      - switch.toggle: grey_water_pump
+
+# =============================================================================
+# SWITCHES - Physical Controls
+# =============================================================================
+
+switch:
+  # Grey water pump relay
+  - platform: gpio
+    pin: GPIO23  # Adjust to your wiring
+    name: "Grey Water Pump"
+    id: grey_water_pump
+    on_turn_on:
+      - lambda: |-
+          id(nextion_display).set_component_value("btn_pump", 1);
+    on_turn_off:
+      - lambda: |-
+          id(nextion_display).set_component_value("btn_pump", 0);
+
+# =============================================================================
+# SENSORS - Tank Levels (replace with your actual sensor configuration)
+# =============================================================================
+
+sensor:
+  # Example: Freshwater tank level sensor
+  - platform: homeassistant
+    id: fresh_water_level
+    entity_id: sensor.freshwater_tank_level
+    internal: true
+
+  # Example: Greywater tank level sensor
+  - platform: homeassistant
+    id: grey_water_level
+    entity_id: sensor.greywater_tank_level
+    internal: true
+
+  # Example: Diesel tank level sensor
+  - platform: homeassistant
+    id: diesel_level
+    entity_id: sensor.diesel_tank_level
+    internal: true
+
+  # Example: Gas 1 tank level sensor
+  - platform: homeassistant
+    id: gas1_level
+    entity_id: sensor.gas1_tank_level
+    internal: true
+
+  # Example: Gas 2 tank level sensor
+  - platform: homeassistant
+    id: gas2_level
+    entity_id: sensor.gas2_tank_level
+    internal: true
+
+# =============================================================================
+# TEXT SENSORS - Status Bar
+# =============================================================================
+
+text_sensor:
+  # Status bar text (time, date, temperatures)
+  - platform: template
+    id: status_text
+    lambda: |-
+      char buffer[100];
+      auto time = id(homeassistant_time).now();
+      auto inside_temp = id(inside_temperature).state;
+      auto outside_temp = id(outside_temperature).state;
+
+      sprintf(buffer, "%02d:%02d:%02d  %02d.%s.%02d     In: %.0f°C  Out: %.0f°C",
+        time.hour, time.minute, time.second,
+        time.day_of_month, time.strftime("%b").c_str(), time.year % 100,
+        inside_temp, outside_temp);
+
+      return {buffer};
+
+# =============================================================================
+# TIME - Required for status bar clock
+# =============================================================================
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# =============================================================================
+# ADDITIONAL SENSORS TO ADD
+# =============================================================================
+
+# TODO: Add temperature sensors (inside/outside)
+# - platform: homeassistant
+#   id: inside_temperature
+#   entity_id: sensor.inside_temperature
+#   internal: true
+#
+# - platform: homeassistant
+#   id: outside_temperature
+#   entity_id: sensor.outside_temperature
+#   internal: true
+
+# =============================================================================
+# NOTES FOR OTHER SECTIONS
+# =============================================================================
+
+# Electric_1 & Electric_2:
+# - Battery level, voltage, current
+# - Solar power input
+# - Shore power status
+# - Inverter status
+
+# Climate_1:
+# - Temperature sensors (multiple zones)
+# - Heating controls
+
+# Status_1:
+# - System status
+# - Alert messages
+
+# Power_1 & Power_2:
+# - Power consumption meters
+# - Power distribution
