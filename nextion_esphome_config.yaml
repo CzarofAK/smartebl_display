@@ -1,0 +1,212 @@
+# ESPHome Configuration for SmartEBL Nextion Display
+# This file collects all the Nextion display integration code
+#
+# ARCHITECTURE:
+# - SmartEBL device: Handles all physical sensors, relays, GPIO
+# - SmartEBL Display: Only displays data from Home Assistant
+# - Communication: Display reads HA entities, calls HA services
+
+# =============================================================================
+# NEXTION DISPLAY CONFIGURATION
+# =============================================================================
+
+uart:
+  tx_pin: GPIO17  # Adjust to your ESP32 wiring for Nextion
+  rx_pin: GPIO16  # Adjust to your ESP32 wiring for Nextion
+  baud_rate: 115200
+
+display:
+  - platform: nextion
+    id: nextion_display
+    update_interval: 1s
+
+    # Lambda for regular updates (runs every update_interval)
+    lambda: |-
+      // Status bar updates (time, date, temperatures)
+      it.set_component_text("txt_status_bar", id(status_text).state.c_str());
+
+      // === LEVELS PAGE UPDATES ===
+      // Freshwater tank (SmartEBL Tank 1)
+      it.set_component_value("bar_fresh", id(fresh_water_level).state);
+      it.set_component_value("bar_fresh_big", id(fresh_water_level).state);
+      it.set_component_text_printf("val_fresh", "%.0f%%", id(fresh_water_level).state);
+      it.set_component_text_printf("val_fresh_big", "%.0f%%", id(fresh_water_level).state);
+
+      // Greywater tank (SmartEBL Tank 2)
+      it.set_component_value("bar_grey", id(grey_water_level).state);
+      it.set_component_value("bar_grey_big", id(grey_water_level).state);
+      it.set_component_text_printf("val_grey", "%.0f%%", id(grey_water_level).state);
+      it.set_component_text_printf("val_grey_big", "%.0f%%", id(grey_water_level).state);
+
+      // Diesel tank
+      it.set_component_value("bar_diesel", id(diesel_level).state);
+      it.set_component_text_printf("val_diesel", "%.0f%%", id(diesel_level).state);
+
+      // Gas 1 tank
+      it.set_component_value("bar_gas1", id(gas1_level).state);
+      it.set_component_text_printf("val_gas1", "%.0f%%", id(gas1_level).state);
+
+      // Gas 2 tank
+      it.set_component_value("bar_gas2", id(gas2_level).state);
+      it.set_component_text_printf("val_gas2", "%.0f%%", id(gas2_level).state);
+
+      // Update pump button state to match SmartEBL pump switch
+      it.set_component_value("btn_pump", id(water_pump_state).state);
+
+# =============================================================================
+# BINARY SENSORS - Nextion Touch Events
+# =============================================================================
+
+binary_sensor:
+  # Fresh water pump button (Levels_2 page)
+  # Component ID: Find this in Nextion Editor (check btn_pump component ID)
+  - platform: nextion
+    page_id: 4  # Levels_2 page
+    component_id: 26  # TODO: Update this with actual btn_pump component ID
+    name: "Nextion Pump Button"
+    on_press:
+      # Call Home Assistant service to toggle SmartEBL pump
+      - homeassistant.service:
+          service: switch.toggle
+          data:
+            entity_id: switch.water_pump
+
+  # Water pump status from SmartEBL (for display sync)
+  - platform: homeassistant
+    id: water_pump_state
+    entity_id: switch.water_pump
+    internal: true
+
+# =============================================================================
+# SENSORS - Tank Levels from SmartEBL
+# =============================================================================
+
+sensor:
+  # Freshwater tank (SmartEBL Tank 1)
+  - platform: homeassistant
+    id: fresh_water_level
+    entity_id: sensor.tank_1_level
+    internal: true
+
+  # Greywater tank (SmartEBL Tank 2)
+  - platform: homeassistant
+    id: grey_water_level
+    entity_id: sensor.tank_2_level
+    internal: true
+
+  # Diesel tank - TODO: Add to SmartEBL or specify external source
+  - platform: homeassistant
+    id: diesel_level
+    entity_id: sensor.diesel_tank_level  # TODO: Verify entity_id
+    internal: true
+
+  # Gas 1 tank - TODO: Add to SmartEBL or specify external source
+  - platform: homeassistant
+    id: gas1_level
+    entity_id: sensor.gas1_tank_level  # TODO: Verify entity_id
+    internal: true
+
+  # Gas 2 tank - TODO: Add to SmartEBL or specify external source
+  - platform: homeassistant
+    id: gas2_level
+    entity_id: sensor.gas2_tank_level  # TODO: Verify entity_id
+    internal: true
+
+  # Inside temperature (from Truma)
+  - platform: homeassistant
+    id: inside_temperature
+    entity_id: sensor.truma_room_temperature
+    internal: true
+
+  # Outside temperature - TODO: Specify source
+  - platform: homeassistant
+    id: outside_temperature
+    entity_id: sensor.outside_temperature  # TODO: Verify entity_id
+    internal: true
+
+# =============================================================================
+# TEXT SENSORS - Status Bar
+# =============================================================================
+
+text_sensor:
+  # Status bar text (time, date, temperatures)
+  - platform: template
+    id: status_text
+    update_interval: 1s
+    lambda: |-
+      char buffer[100];
+      auto time = id(homeassistant_time).now();
+      auto inside_temp = id(inside_temperature).state;
+      auto outside_temp = id(outside_temperature).state;
+
+      sprintf(buffer, "%02d:%02d:%02d  %02d.%s.%02d     In: %.0f°C  Out: %.0f°C",
+        time.hour, time.minute, time.second,
+        time.day_of_month, time.strftime("%b").c_str(), time.year % 100,
+        inside_temp, outside_temp);
+
+      return {buffer};
+
+# =============================================================================
+# TIME - Required for status bar clock
+# =============================================================================
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# =============================================================================
+# TODO: SENSORS TO ADD/CONFIGURE
+# =============================================================================
+
+# From SmartEBL (already available):
+# - sensor.tank_1_level (Freshwater) ✓
+# - sensor.tank_2_level (Greywater) ✓
+# - sensor.tank_3_level (unused)
+# - sensor.truma_room_temperature (Inside temp) ✓
+# - switch.water_pump ✓
+# - sensor.leisure_battery_voltage
+# - sensor.starter_battery_voltage
+# - binary_sensor.shore_power_connected
+# - binary_sensor.dplus_active
+# - sensor.pump_output_voltage (to verify pump is actually on)
+
+# Still need to identify sources for:
+# - Diesel tank level sensor
+# - Gas bottle 1 level sensor
+# - Gas bottle 2 level sensor
+# - Outside temperature sensor
+# These might be:
+#   a) Additional sensors connected to SmartEBL
+#   b) Separate Home Assistant integrations
+#   c) RV-C network data via SmartEBL CAN bus
+
+# =============================================================================
+# NOTES FOR OTHER SECTIONS
+# =============================================================================
+
+# Electric_1 & Electric_2:
+# From SmartEBL:
+# - sensor.leisure_battery_voltage
+# - sensor.starter_battery_voltage
+# - binary_sensor.shore_power_connected
+# - binary_sensor.dplus_active
+# Still need: Solar power, inverter status
+
+# Climate_1:
+# From SmartEBL:
+# - sensor.truma_room_temperature
+# - sensor.truma_water_temperature
+# - climate.truma_heater
+# - number.truma_target_room_temp
+# - number.truma_target_water_temp
+
+# Status_1:
+# From SmartEBL:
+# - All fuse status (binary_sensor.fuse_f1_ok through f16_ok)
+# - binary_sensor.truma_has_error
+# - System diagnostics
+
+# Power_1 & Power_2:
+# From SmartEBL:
+# - Output voltage monitoring for all circuits
+# - Switch controls for light/aux/12v groups
