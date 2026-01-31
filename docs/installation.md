@@ -631,6 +631,131 @@ uart:
 
 ---
 
+### Nextion Button Issues
+
+#### Button Only Works Once (Dual-State Button Problem)
+
+**Symptoms**: Pressing a Nextion dual-state button (e.g., pump button) works the first time, but subsequent presses are ignored.
+
+**Root Cause**: Dual-state buttons auto-toggle their `.val` property internally. When ESPHome also updates `.val`, it creates a conflict.
+
+**Solution: Configure Nextion Button Correctly**
+
+In Nextion Editor for the button (e.g., `btn_pump`):
+
+1. **Enable "Send Component ID"**:
+   - Select the button component
+   - In the **Event** panel (right side)
+   - Check ☑️ **"Send Component ID"** checkbox
+   - This sends standard touch events (0x65 format) that ESPHome can detect
+
+2. **Add Touch Press Event code to reset auto-toggle**:
+   ```
+   // Prevent button from auto-toggling - ESPHome controls the state
+   // This runs AFTER the button auto-toggles, so we reset it
+   click btn_pump,0
+   ```
+
+   This ensures the button's visual state is controlled solely by ESPHome.
+
+3. **Re-upload HMI to display** (via SD card or USB)
+
+**ESPHome Configuration**:
+
+```yaml
+# Detect button press (binary_sensor only triggers on touch events)
+binary_sensor:
+  - platform: nextion
+    page_id: 4           # Your Levels_2 page ID
+    component_id: 23     # Your btn_pump component ID
+    name: "Nextion Pump Button"
+    on_press:
+      - switch.toggle: switch_pump
+
+# Template switch that syncs state back to Nextion
+switch:
+  - platform: template
+    name: "Water Pump"
+    id: switch_pump
+    icon: mdi:water-pump
+    optimistic: true
+    turn_on_action:
+      - switch.turn_on: relay_pump_on_coil
+      - delay: 50ms  # Small delay for stability
+      - lambda: |-
+          id(nextion_display).set_component_value("Levels_2.btn_pump", 1);
+    turn_off_action:
+      - switch.turn_on: relay_pump_off_coil
+      - delay: 50ms
+      - lambda: |-
+          id(nextion_display).set_component_value("Levels_2.btn_pump", 0);
+```
+
+**Key Points**:
+- Use full page prefix: `Levels_2.btn_pump` (not just `btn_pump`)
+- Add small delay before updating Nextion to avoid race conditions
+- Use `binary_sensor` (NOT `nextion switch`) to detect touches
+- The `on_press` triggers on each button touch
+
+---
+
+#### Finding Button's Component ID
+
+To find the correct `component_id` for a button:
+
+1. In Nextion Editor, select the button
+2. Look at the **Attribute** panel → find `.id` property
+3. OR enable ESPHome DEBUG logging and press the button:
+   ```yaml
+   logger:
+     level: DEBUG
+     baud_rate: 0
+   ```
+4. Check logs for: `Nextion PRESS: page=4, component=23`
+
+---
+
+#### Wrong Button State at Boot
+
+**Symptoms**: Nextion shows pump ON (green) when pump is actually OFF after reboot.
+
+**Solution**: Sync Nextion state on boot:
+
+```yaml
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      # ... other boot actions ...
+      - delay: 3s  # Wait for Nextion to initialize
+      - lambda: |-
+          // Sync button state to match actual pump state
+          id(nextion_display).set_component_value(
+            "Levels_2.btn_pump",
+            id(switch_pump).state ? 1 : 0
+          );
+```
+
+---
+
+#### Alternative: Use Regular Button (Not Dual-State)
+
+If dual-state buttons continue to cause issues, convert to a regular button with manual state indication:
+
+1. In Nextion Editor, replace dual-state button with:
+   - A regular **Button** component, OR
+   - A **Hotspot** over two **Picture** components (on/off states)
+
+2. Control visibility/pictures from ESPHome:
+   ```yaml
+   lambda: |-
+     // Show/hide based on pump state
+     id(nextion_display).set_component_visibility("pic_pump_on", id(switch_pump).state);
+     id(nextion_display).set_component_visibility("pic_pump_off", !id(switch_pump).state);
+   ```
+
+---
+
 ### Common Configuration Mistakes
 
 #### ❌ Wrong Baud Rate

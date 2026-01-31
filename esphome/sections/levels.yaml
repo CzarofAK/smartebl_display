@@ -145,27 +145,45 @@ sensor:
 # ============================================
 
 binary_sensor:
-  # Water Pump Status
-  - platform: homeassistant
-    id: water_pump_running
-    entity_id: binary_sensor.water_pump  # ← CUSTOMIZE
-    name: "Water Pump"
+  # Nextion Pump Button Touch Detection
+  # IMPORTANT: In Nextion Editor, for btn_pump:
+  #   1. Check "Send Component ID" checkbox in Event panel
+  #   2. Add to Touch Press Event: click btn_pump,0
+  #      (This prevents auto-toggle - ESPHome controls the state)
+  - platform: nextion
+    page_id: 4           # ← CUSTOMIZE: Your Levels_2 page ID
+    component_id: 23     # ← CUSTOMIZE: Your btn_pump component ID
+    name: "Nextion Pump Button"
+    internal: true       # Hide from Home Assistant
     on_press:
-      then:
-        - lambda: |-
-            id(nextion_display).set_component_text("btn_pump", "ON");
-            id(nextion_display).set_component_value("btn_pump.bco", 2016);  // Green
-    on_release:
-      then:
-        - lambda: |-
-            id(nextion_display).set_component_text("btn_pump", "OFF");
-            id(nextion_display).set_component_value("btn_pump.bco", 63488);  // Red
+      - switch.toggle: water_pump_switch
 
 switch:
-  # Water Pump Control
-  - platform: homeassistant
+  # Water Pump Control (Template Switch with Nextion sync)
+  # For SmartEBL users: Replace with your relay control logic
+  - platform: template
+    name: "Water Pump"
     id: water_pump_switch
-    entity_id: switch.water_pump  # ← CUSTOMIZE
+    icon: mdi:water-pump
+    optimistic: true
+    turn_on_action:
+      # For SmartEBL: - switch.turn_on: relay_pump_on_coil
+      - homeassistant.service:
+          service: switch.turn_on
+          data:
+            entity_id: switch.water_pump  # ← CUSTOMIZE
+      - delay: 50ms
+      - lambda: |-
+          id(nextion_display).set_component_value("Levels_2.btn_pump", 1);
+    turn_off_action:
+      # For SmartEBL: - switch.turn_on: relay_pump_off_coil
+      - homeassistant.service:
+          service: switch.turn_off
+          data:
+            entity_id: switch.water_pump  # ← CUSTOMIZE
+      - delay: 50ms
+      - lambda: |-
+          id(nextion_display).set_component_value("Levels_2.btn_pump", 0);
 
 # ============================================
 # NEXTION COMPONENTS (Reference)
@@ -178,11 +196,32 @@ switch:
 # - Text "tank_adblue"  → AdBlue Level (with color)
 # - Text "tank_gas1"    → Gas Bottle 1 Level (with color)
 # - Text "tank_gas2"    → Gas Bottle 2 Level (with color)
-# - Button "btn_pump"   → Water Pump ON/OFF (with color)
 #
 # Required on Levels_2 Page (External Fill Display):
 # - Text "tank_fresh_large"   → Large Fresh Water display
 # - Text "txt_fresh_percent"  → Fresh Water percentage
+# - Dual-State Button "btn_pump" → Water Pump ON/OFF
+#
+# ============================================
+# PUMP BUTTON CONFIGURATION (CRITICAL!)
+# ============================================
+#
+# For btn_pump to work reliably with ESPHome:
+#
+# 1. In Nextion Editor, select btn_pump
+# 2. In Event panel (right side), check "Send Component ID"
+# 3. In Touch Press Event tab, add this code:
+#
+#    click btn_pump,0
+#
+#    This prevents the button from auto-toggling its state.
+#    ESPHome will control the visual state via set_component_value.
+#
+# 4. Find your component ID:
+#    - Look at btn_pump's .id attribute in Nextion Editor
+#    - OR check ESPHome DEBUG logs when pressing button
+#
+# 5. Update page_id and component_id in ESPHome config above
 
 # ============================================
 # CUSTOMIZATION NOTES

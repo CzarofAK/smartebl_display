@@ -53,21 +53,28 @@ display:
       it.set_component_value("bar_gas2", id(gas2_level).state);
       it.set_component_text_printf("val_gas2", "%.0f%%", id(gas2_level).state);
 
-      // Update pump button state to match LOCAL SmartEBL pump switch
-      it.set_component_value("btn_pump", id(switch_pump).state);
+      // NOTE: btn_pump state is synced in switch_pump turn_on/off_action
+      // DO NOT update btn_pump here - it interferes with button touch detection!
 
 # =============================================================================
 # BINARY SENSORS - Nextion Touch Events
 # =============================================================================
+#
+# CRITICAL: For pump button to work reliably, configure in Nextion Editor:
+#   1. Select btn_pump
+#   2. Check "Send Component ID" checkbox in Event panel
+#   3. In Touch Press Event, add: click btn_pump,0
+#      (This prevents auto-toggle - ESPHome controls the visual state)
 
 binary_sensor:
   # Fresh water pump button (Levels_2 page)
   # Component ID: Press btn_pump and check serial output (third byte in hex)
-  # Example: "65 04 18 01 FF FF FF" = component_id: 24 (0x18 decimal)
+  # Example: "65 04 17 01 FF FF FF" = component_id: 23 (0x17 decimal)
   - platform: nextion
     page_id: 4  # Levels_2 page
-    component_id: 24  # TODO: Update with actual btn_pump component ID from serial output
+    component_id: 23  # TODO: Update with actual btn_pump component ID from serial output
     name: "Nextion Pump Button"
+    internal: true  # Hide from Home Assistant (pump switch is the real entity)
     on_press:
       # Toggle LOCAL SmartEBL pump switch
       - switch.toggle: switch_pump
@@ -137,6 +144,49 @@ time:
     id: homeassistant_time
 
 # =============================================================================
+# SWITCH_PUMP MODIFICATION (Add to your SmartEBL config)
+# =============================================================================
+# Modify your existing switch_pump to sync state to Nextion display.
+#
+# REPLACE your switch_pump definition with:
+#
+#   - platform: template
+#     name: "Water Pump"
+#     id: switch_pump
+#     icon: mdi:water-pump
+#     optimistic: true
+#     turn_on_action:
+#       - switch.turn_on: relay_pump_on_coil
+#       - delay: 50ms  # Small delay for stability
+#       - lambda: |-
+#           id(nextion_display).set_component_value("Levels_2.btn_pump", 1);
+#     turn_off_action:
+#       - switch.turn_on: relay_pump_off_coil
+#       - delay: 50ms
+#       - lambda: |-
+#           id(nextion_display).set_component_value("Levels_2.btn_pump", 0);
+#
+# IMPORTANT: Use full page prefix "Levels_2.btn_pump" not just "btn_pump"!
+
+# =============================================================================
+# BOOT STATE SYNC (Add to your SmartEBL config)
+# =============================================================================
+# Add this to your esphome: on_boot: section to sync pump button on startup:
+#
+# esphome:
+#   on_boot:
+#     priority: -100
+#     then:
+#       # ... existing boot actions ...
+#       - delay: 3s  # Wait for Nextion to initialize
+#       - lambda: |-
+#           // Sync pump button state on boot
+#           id(nextion_display).set_component_value(
+#             "Levels_2.btn_pump",
+#             id(switch_pump).state ? 1 : 0
+#           );
+
+# =============================================================================
 # TODO: SENSORS TO ADD/CONFIGURE
 # =============================================================================
 
@@ -145,7 +195,7 @@ time:
 # ✓ id: tank2_level (Greywater)
 # ✓ id: tank3_level (unused)
 # ✓ id: truma_room_temp (Inside temperature)
-# ✓ id: switch_pump (Water pump control)
+# ✓ id: switch_pump (Water pump control) - MODIFY as shown above!
 # ✓ id: leisure_battery_voltage
 # ✓ id: starter_battery_voltage
 # ✓ id: shore_power_connected
