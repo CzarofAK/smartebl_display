@@ -54,7 +54,8 @@ display:
       it.set_component_text_printf("val_gas2", "%.0f%%", id(gas2_level).state);
 
       // Update pump button state to match LOCAL SmartEBL pump switch
-      it.set_component_value("btn_pump", id(switch_pump).state);
+      // Note: switch_pump.state returns bool, need to convert to 0/1
+      it.set_component_value("btn_pump", id(switch_pump).state ? 1 : 0);
 
 # =============================================================================
 # BINARY SENSORS - Nextion Touch Events
