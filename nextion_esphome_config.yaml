@@ -38,7 +38,7 @@ display:
       it.send_command_printf("g_bar_fresh.val=%d", (int)id(tank1_level).state);
       it.send_command_printf("g_val_fresh.txt=\"%.0f%%\"", id(tank1_level).state);
       int fresh_col = (id(tank1_level).state < 20) ? 63488 : (id(tank1_level).state < 40) ? 64512 : 2016;
-      it.send_command_printf "g_val_fresh_col.val=%d", fresh_col);
+      it.send_command_printf "g_val_fresh_c.val=%d", fresh_col);
       it.set_component_value("val_fresh.pco", fresh_col);
 
       // Greywater tank (LOCAL SmartEBL sensor: tank2_level)
@@ -50,7 +50,7 @@ display:
       it.send_command_printf("g_bar_grey.val=%d", (int)id(tank2_level).state);
       it.send_command_printf("g_val_grey.txt=\"%.0f%%\"", id(tank2_level).state);
       int grey_col = (id(tank2_level).state > 80) ? 63488 : (id(tank2_level).state > 60) ? 64512 : 2016;
-      it.send_command_printf("g_val_grey_col.val=%d", grey_col);
+      it.send_command_printf("g_val_grey_c.val=%d", grey_col);
       it.set_component_value("val_grey.pco", grey_col);
 
       // Diesel tank (EXTERNAL from Home Assistant)
@@ -60,7 +60,7 @@ display:
       it.send_command_printf("g_bar_diesel.val=%d", (int)id(diesel_level).state);
       it.send_command_printf("g_val_diesel.txt=\"%.0f%%\"", id(diesel_level).state);
       int diesel_col = (id(diesel_level).state < 15) ? 63488 : (id(diesel_level).state < 30) ? 64512 : 2016;
-      it.send_command_printf("g_val_diesel_col.val=%d", diesel_col);
+      it.send_command_printf("g_val_diesel_c.val=%d", diesel_col);
       it.set_component_value("val_diesel.pco", diesel_col);
 
       // Gas 1 tank (EXTERNAL from Home Assistant)
@@ -70,7 +70,7 @@ display:
       it.send_command_printf("g_bar_gas1.val=%d", (int)id(gas1_level).state);
       it.send_command_printf("g_val_gas1.txt=\"%.0f%%\"", id(gas1_level).state);
       int gas1_col = (id(gas1_level).state < 20) ? 63488 : (id(gas1_level).state < 40) ? 64512 : 2016;
-      it.send_command_printf("g_val_gas1_col.val=%d", gas1_col);
+      it.send_command_printf("g_val_gas1_c.val=%d", gas1_col);
       it.set_component_value("val_gas1.pco", gas1_col);
 
       // Gas 2 tank (EXTERNAL from Home Assistant)
@@ -80,7 +80,7 @@ display:
       it.send_command_printf("g_bar_gas2.val=%d", (int)id(gas2_level).state);
       it.send_command_printf("g_val_gas2.txt=\"%.0f%%\"", id(gas2_level).state);
       int gas2_col = (id(gas2_level).state < 20) ? 63488 : (id(gas2_level).state < 40) ? 64512 : 2016;
-      it.send_command_printf("g_val_gas2_col.val=%d", gas2_col);
+      it.send_command_printf("g_val_gas2_c.val=%d", gas2_col);
       it.set_component_value("val_gas2.pco", gas2_col);
 
       // Update pump button state to match LOCAL SmartEBL pump switch
